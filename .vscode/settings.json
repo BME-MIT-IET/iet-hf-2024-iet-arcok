@@ -3,5 +3,9 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar"
-    ]
+    ],
+    "sonarlint.connectedMode.project": {
+        "connectionId": "bme-mit-iet-org",
+        "projectKey": "BME-MIT-IET_iet-hf-2024-iet-arcok"
+    }
 }
