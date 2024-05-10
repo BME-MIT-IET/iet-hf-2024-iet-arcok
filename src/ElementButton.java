@@ -34,7 +34,7 @@ public class ElementButton extends JButton{
     ElementButton(Element element)
     {
         this.element=element;
-        if(getImageName()!=""){
+        if(!getImageName().isEmpty()){
             try {
                 /** 
                  * Beolvassa a megfelelő képfájlt, es atmeretezi 40x40-re.
@@ -101,6 +101,9 @@ public class ElementButton extends JButton{
     private boolean findElementInNeighbors(Element e)
     {
         boolean out = false;
+        if (e == null) {
+            return false;
+        }
         for(Element neighbor : e.getNeighbors())
         {
             if(neighbor==element)
@@ -157,7 +160,7 @@ public class ElementButton extends JButton{
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         /** Csak azokat a muveleteket jelenitjuk meg amit az adott karakterrel lehet vegezni.*/ 
-        boolean isRepairman = Game.getInstance().getCurrentCharacter().getClass().getName().equals("Repairman");
+        boolean isRepairman = Game.getInstance().getCurrentCharacter() instanceof Repairman;
         boolean hasNothing = isRepairman&&((Repairman)Game.getInstance().getCurrentCharacter()).getHoldingPipe()==null&& !((Repairman)Game.getInstance().getCurrentCharacter()).hasHoldingPump();
         /** Letrehozunk egy JPanel objektumot az ActionButton-ok tarolasara*/
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -252,7 +255,7 @@ public class ElementButton extends JButton{
         }
         
         //Ha az elemen végre lehet hajtani javítást, akkor hozzáadunk egy ezt végrehajtó gombot
-        if(isRepairman && element.canPerformAction("Repair")&&place==element && (element.getClass().getName().equals("Pump") && ((Pump)element).getBroken() || element.getClass().getName().equals("Pipe") && ((Pipe)element).getHoleOnPipe())) {
+        if(isRepairman && element.canPerformAction("Repair")&&place==element && ((element instanceof Pump) && ((Pump)element).getBroken() || element instanceof Pipe && ((Pipe)element).getHoleOnPipe())) {
             ActionButton repairButton = new ActionButton(null);
             repairButton.setActionCommand("Repair");
             repairButton.setText("Repair");
@@ -336,7 +339,7 @@ public class ElementButton extends JButton{
         for(Character c : cs){
             JLabel b = new JLabel();
             String imgname;
-            if(c.getClass().getName().equals("Repairman")){
+            if(c instanceof Repairman){
                 imgname = "man-mechanic.png";
                 if(((Repairman)c).hasHoldingPump()){
                     imgname = "man-with-pump.png";
@@ -359,7 +362,7 @@ public class ElementButton extends JButton{
                 Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                 Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
                 b.setIcon(new ImageIcon(newimg));
-                if(element.getClass().getName().equals("Pipe")){
+                if(element instanceof Pipe){
                     b.setBounds(20, 20, 20, 20);
                 }else{
                     b.setBounds(offset, 0, 20, 20);
@@ -372,7 +375,7 @@ public class ElementButton extends JButton{
         }
 
         // Állapotok ha pumpa
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump e = (Pump)element;
             if(e.getBroken()){
                 JLabel b = new JLabel();
@@ -401,7 +404,7 @@ public class ElementButton extends JButton{
         } 
 
         // Állapotok ha cső
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
 
             Pipe e = (Pipe)element;
             if(e.getHoleOnPipe()){
@@ -461,7 +464,7 @@ public class ElementButton extends JButton{
                     }
                 }
                 JLabel b = new JLabel();
-                if(imgname!=""){
+                if(!imgname.isEmpty()){
                     try {
                         Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                         Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
@@ -486,7 +489,7 @@ public class ElementButton extends JButton{
      * @return
      */
     public ArrayList<ElementButton> getNeighboursElementButton(ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
             List<Element> es = (List<Element>) element.getNeighbors();
             ArrayList<ElementButton> toReturn = new ArrayList<ElementButton>();
             for(Element eiter : es){
@@ -509,7 +512,7 @@ public class ElementButton extends JButton{
      * @param eb - Az összes UI elementButton elem.
      */
     public void drawWaterFlowDirection(Graphics g, ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump p = (Pump)element;
             Element src = p.getSrc();
             Element dest = p.getDest();
@@ -519,9 +522,9 @@ public class ElementButton extends JButton{
             Graphics2D g2 = (Graphics2D)g;
             g2.setStroke(new BasicStroke(2));
             g2.setColor(Color.GREEN);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
             g2.setColor(Color.RED);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
         }
     }
 

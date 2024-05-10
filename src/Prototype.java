@@ -107,10 +107,11 @@ public class Prototype {
         pumps.clear();
 
         File f = new File("mapdeclarations/"+file+".txt");
+        Scanner sc = null;
         try 
         {
             int readPhase = 0;
-            Scanner sc = new Scanner(f);
+            sc = new Scanner(f);
             sc.nextLine(); //kidobjuk az első sort
             while(sc.hasNext())
             {
@@ -276,6 +277,9 @@ public class Prototype {
                 {
                     System.out.println(file+".txt Load failed");
                 }
+                finally {
+                    sc.close();
+                }
             }
             System.out.println(file+".txt Load successful");
             sc.close();
@@ -288,16 +292,16 @@ public class Prototype {
                         int repPoints = 0;
                         int _slimey = 3;
                         int _sticky = 3;
+                        Scanner scPoints = null;
                         try{
                             File fPoints = new File(file+"Points.txt"); 
-                            Scanner scPoints = new Scanner(fPoints);
+                            scPoints = new Scanner(fPoints);
 
                             round = sc.nextInt();
                             repPoints = sc.nextInt();
                             sabPoints = sc.nextInt();
                             _slimey = sc.nextInt();
                             _sticky = sc.nextInt();
-                            scPoints.close();
                         }
                         catch(Exception e)
                         {
@@ -306,6 +310,11 @@ public class Prototype {
                             repPoints = 0;
                             _slimey = 3;
                             _sticky = 3;
+                        }
+                        finally {
+                            if (scPoints != null) {
+                                scPoints.close();
+                            }
                         }
                         Game.getInstance().load(gameElements, sabPointSource, cisterns, repairmanGroup, saboteurGroup, repPoints, sabPoints, round,_slimey,_sticky,pumps);
                         //System.out.println(file+"Points.txt Load Successful");

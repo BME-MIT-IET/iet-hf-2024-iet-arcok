@@ -24,16 +24,20 @@ public abstract class Character {
 	}
 	public synchronized void step() {
 		resetRemainingSteps();
-		try{
+		try {
 			wait();
-		}catch(Exception e)
-		{
+		}
+        catch (ThreadDeath e) {
+            e.printStackTrace();
+            throw e;
+        }
+        catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	public void makeSticky(){}/** Ragadossa teszi az adott csovet amin all*/
 	
-	public synchronized void WakeUp() {
-		this.notify();
+	public synchronized void wakeUp() {
+		this.notifyAll();
 	}
 }
