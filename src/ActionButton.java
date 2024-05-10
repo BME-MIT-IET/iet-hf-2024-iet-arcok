@@ -79,7 +79,8 @@ public class ActionButton extends JButton{
                 case "EndMove": 
                 	instance.EndMove();
                 	break;
-
+                default:
+                    break;
                 }
 
             }

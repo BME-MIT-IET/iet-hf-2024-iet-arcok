@@ -150,8 +150,6 @@ public class Pump extends NonPipe implements SaboteurPointSource {
     public void breakPump(){ 
     	 broken=true;
     }
-    public void stick() {};/** Ragadossa teszi az adott poziciot. */
-    public void slime(){};/** Csuszossa tesz egy csovet. */
 
     /** 
      * Visszadja a kifolyott viz mennyiseget, majd nullara allitja

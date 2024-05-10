@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Prototípus osztály. Csak tesztelésre (Prototype, nogui Version)
@@ -25,6 +27,7 @@ public class Prototype {
     int ac = 0; //* ActionCounter */
 
 	private String selectedMenuItem; /** A kivalasztott parancs */
+    private Logger logger;
 
     /**
      * Inicializálja a Prototype-ot
@@ -107,11 +110,9 @@ public class Prototype {
         pumps.clear();
 
         File f = new File("mapdeclarations/"+file+".txt");
-        Scanner sc = null;
-        try 
+        try (Scanner sc = new Scanner(f))
         {
             int readPhase = 0;
-            sc = new Scanner(f);
             sc.nextLine(); //kidobjuk az első sort
             while(sc.hasNext())
             {
@@ -277,9 +278,6 @@ public class Prototype {
                 {
                     System.out.println(file+".txt Load failed");
                 }
-                finally {
-                    sc.close();
-                }
             }
             System.out.println(file+".txt Load successful");
             sc.close();
@@ -292,11 +290,8 @@ public class Prototype {
                         int repPoints = 0;
                         int _slimey = 3;
                         int _sticky = 3;
-                        Scanner scPoints = null;
-                        try{
-                            File fPoints = new File(file+"Points.txt"); 
-                            scPoints = new Scanner(fPoints);
-
+                        File fPoints = new File(file+"Points.txt"); 
+                        try (Scanner scPoints = new Scanner(fPoints)){
                             round = sc.nextInt();
                             repPoints = sc.nextInt();
                             sabPoints = sc.nextInt();
@@ -310,11 +305,6 @@ public class Prototype {
                             repPoints = 0;
                             _slimey = 3;
                             _sticky = 3;
-                        }
-                        finally {
-                            if (scPoints != null) {
-                                scPoints.close();
-                            }
                         }
                         Game.getInstance().load(gameElements, sabPointSource, cisterns, repairmanGroup, saboteurGroup, repPoints, sabPoints, round,_slimey,_sticky,pumps);
                         //System.out.println(file+"Points.txt Load Successful");
@@ -437,12 +427,15 @@ public class Prototype {
      */
     public void togglerandom(String param)
     {
-        if(param.equals("I"))
-        Game.getInstance().setRandomEnabled(true);
-        else if(param.equals("N"))
-        Game.getInstance().setRandomEnabled(false);
-        else
-        System.out.println("Invalid input");
+        if (param.equals("I")) {
+            Game.getInstance().setRandomEnabled(true);
+        }
+        else if (param.equals("N")) {
+            Game.getInstance().setRandomEnabled(false);
+        }
+        else {
+            System.out.println("Invalid input");
+        }
     }
 
     /**
@@ -468,11 +461,13 @@ public class Prototype {
      */
     public void help()
     {
-        if(isCurrentRepairman())
+        if(isCurrentRepairman()) {
             System.out.println("adjust int int\nmove int\nstab\nrepair\npickuppump\npickuppipe int\nplacepump\nplacepipe\nstick\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
-        else
-        System.out.println("adjust int int\nmove int\nstab\nstick\nslime\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
         }
+        else {
+            System.out.println("adjust int int\nmove int\nstab\nstick\nslime\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
+        }
+    }
 
     public void info(String name){
         boolean found = false;
@@ -500,7 +495,7 @@ public class Prototype {
         try{
             Game.getInstance().endTurn();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.log(Level.FINER, e.toString());
         }
         String prevname = currentCharacter.getName();
         if(++currentCharacterInt>=characters.size()){

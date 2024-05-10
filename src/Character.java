@@ -1,9 +1,14 @@
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Character osztaly, mely a jatekosok által irányított karaktereket reprezentálja.
  * @author Bodnar Mark*/
 public abstract class Character {
     private String Name;
 	private int remainingSteps = 3;
+    private Logger logger;
+    
     String getName() {return Name;}
     void setName(String name) {this.Name=name;}
 	public void move(int dir) {}/** Csorendszeren mozgas.*/
@@ -28,11 +33,10 @@ public abstract class Character {
 			wait();
 		}
         catch (ThreadDeath e) {
-            e.printStackTrace();
             throw e;
         }
         catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.FINER, e.toString());
 		}
 	}
 	public void makeSticky(){}/** Ragadossa teszi az adott csovet amin all*/
