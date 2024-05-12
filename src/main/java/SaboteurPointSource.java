@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * A szabotőrök számára pontszámot generáló objektumok interfésze.
  */

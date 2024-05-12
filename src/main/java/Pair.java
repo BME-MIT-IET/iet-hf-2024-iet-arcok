@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * Egyszerű osztály, amely két objektumot képes együtt tárolni.
  */

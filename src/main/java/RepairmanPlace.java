@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * Interfész, ami a szerelők által látható metódusokat tartalmazza a Place osztályból.
  */

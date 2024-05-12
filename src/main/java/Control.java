@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * A MVC modell Control osztálya. Singleton osztály.
  */

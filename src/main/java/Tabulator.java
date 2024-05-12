@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * A skeleton osztálybeli parancssoros diagramok megjelenítéséhez használt osztály.
  */

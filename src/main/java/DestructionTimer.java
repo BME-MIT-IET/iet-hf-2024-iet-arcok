@@ -1,4 +1,4 @@
-package main.java;
+
 import java.util.ArrayList;
 /**
  * Idozito, mely minden jatekos lepese elott, veletlen esellyel elrontja az egyes pumpakat.

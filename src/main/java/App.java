@@ -1,4 +1,4 @@
-package main.java;
+
 /**
  * Az Alkalmazás belépési pontja.
  */
