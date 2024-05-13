@@ -1,4 +1,3 @@
-
 /**
  * Character osztaly, mely a jatekosok által irányított karaktereket reprezentálja.
  * @author Bodnar Mark*/

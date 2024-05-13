@@ -1,4 +1,3 @@
-
 /**
  * A MVC modell Control osztálya. Singleton osztály.
  */

@@ -1,4 +1,3 @@
-
 /**
  * A skeleton osztálybeli parancssoros diagramok megjelenítéséhez használt osztály.
  */

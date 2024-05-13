@@ -1,4 +1,3 @@
-
 /**
  * Interfész, ami a szabotőrök által látható metódusokat tartalmazza a Place
  * osztályból.

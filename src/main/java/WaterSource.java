@@ -1,4 +1,3 @@
-
 import java.util.List;
 /**
  * Vegtelen vizforras. Eltarolja a szomszedos csoveket es belejuk vizet pumpal. Veges szamu Jatekos ra tud lepni.

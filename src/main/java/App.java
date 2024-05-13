@@ -1,4 +1,3 @@
-
 /**
  * Az Alkalmazás belépési pontja.
  */

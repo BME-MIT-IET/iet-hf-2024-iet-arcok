@@ -1,4 +1,3 @@
-
 /**
  * Egyszerű osztály, amely két objektumot képes együtt tárolni.
  */
