@@ -1,4 +1,6 @@
 public class Actions {
+    private Actions() {}
+
     public static final String MOVE = "Move";
     public static final String STAB = "Stab";
     public static final String PLACE_PUMP = "PlacePump";
