@@ -2,3 +2,7 @@
 *.class
 target/
 .idea/
+.settings
+.vscode
+.classpath
+.project
