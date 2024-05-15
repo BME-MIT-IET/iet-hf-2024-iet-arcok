@@ -2,6 +2,9 @@
 NEW_DISPLAY=42
 DONE="no"
 
+mkdir -p ~/.vnc
+echo "password" > ~/.vnc/passwd
+
 while [ "$DONE" == "no" ]
 do
   out=$(xdpyinfo -display :${NEW_DISPLAY} 2>&1)
@@ -16,7 +19,6 @@ do
 done
 
 echo "Using first available display :${NEW_DISPLAY}"
-echo "password" | vncpasswd -f > ~/.vnc/passwd
 
 OLD_DISPLAY=${DISPLAY}
 vncserver ":${NEW_DISPLAY}" -localhost -geometry 1600x1200 -depth 16
