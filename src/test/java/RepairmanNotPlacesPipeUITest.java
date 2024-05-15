@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.assertj.swing.edt.GuiActionRunner;
+import org.assertj.swing.exception.ComponentLookupException;
 import org.assertj.swing.fixture.DialogFixture;
 import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.assertj.swing.exception.ComponentLookupException;
 
 class RepairmanNotPlacesPipeTest {
 	private DialogFixture window;
@@ -27,6 +30,10 @@ class RepairmanNotPlacesPipeTest {
         gui = Gui.resetInstance();
 
         gui.nextPanel();
+
+        Game game = Game.getInstance();
+        game.setCurrentCharacter(game.getRepairmanGroup().get(1));
+        game.getRepairmanGroup().get(1).setHoldingPipe(null);
         
         ElementButton cistern2 = gui.getElementButton("Cistern2EB");
         JDialog dialog = GuiActionRunner.execute(() -> {
@@ -38,36 +45,19 @@ class RepairmanNotPlacesPipeTest {
 
     @Test
     void Repairman_NotPlacesPipe_WhenHeDoesNotHaveOne() {
-        window.button("Cistern2EBEndMove").click();
-
-        final ElementButton cistern2 = gui.getElementButton("Cistern2EB");
-        cistern2.showActionButtonWindow();
-        window.show();
-
-        window.button("Cistern2EBEndMove").click();
-        
-        cistern2.showActionButtonWindow();
-        window.show();
-
-        window.button("Cistern2EBEndMove").click();
-        
-        window.cleanUp();
-        JDialog lastDialog = GuiActionRunner.execute(() -> cistern2.showActionButtonWindow());
-        DialogFixture lastDialogFixture = new DialogFixture(lastDialog);
-        lastDialogFixture.show();
-
         Game game = Game.getInstance();
         ArrayList<Element> elements = game.getGameElements();
         Element pipe6 = elements.get(elements.size() - 1);
-        game.getRepairmanGroup().get(1).setHoldingPipe(null);
         assertNull(game.getRepairmanGroup().get(1).getHoldingPipe());
         assertEquals(1, pipe6.getNeighbors().size());
 
-        lastDialogFixture.button("Cistern2EBPlacePipe").click();
+        assertThrows(ComponentLookupException.class, () -> window.button("Cistern2EBPlacePipe").click());
 
-        assertNull(game.getRepairmanGroup().get(1).getHoldingPipe());
         assertEquals(1, pipe6.getNeighbors().size());
-        
-        lastDialogFixture.cleanUp();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        window.cleanUp();
     }
 }
