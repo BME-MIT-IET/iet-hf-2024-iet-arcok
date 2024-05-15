@@ -75,6 +75,7 @@ public class Gui {
        menuPanel.add(lPlayerCount);
 
        sRoundSettings = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+       sRoundSettings.setName("RoundSetter");
        sRoundSettings.setBounds(700, 90, 50, 50);
        sRoundSettings.setFont(new Font("Arial", Font.PLAIN, 30));
        menuPanel.add(sRoundSettings);
@@ -188,6 +189,7 @@ public class Gui {
 
         //Turn points label
         lTurnPoints = new JLabel("0");
+        lTurnPoints.setName("TurnCounterLabel");
         lTurnPoints.setFont(new Font("Arial", Font.PLAIN, 15));
         lTurnPoints.setBounds(100, 65, 200, 20);
         jPanelScoreBoard.add(lTurnPoints);
@@ -198,12 +200,14 @@ public class Gui {
 
         //Who`s turn label
         lWhosTurn = new JLabel("...-s turn");
+        lWhosTurn.setName("WhosTurnLabel");
         lWhosTurn.setFont(new Font("Arial", Font.BOLD, 25));
         lWhosTurn.setBounds(980, 20, 300, 20);
         gamePanel.add(lWhosTurn);
 
         //End Move button
         JButton bEndMove = new JButton("End Move");
+        bEndMove.setName("EndMoveButton");
         bEndMove.setBounds(980, 550, 300, 50);
         bEndMove.setFont(new Font("Arial", Font.PLAIN, 20));
         bEndMove.setBackground(Color.WHITE);
@@ -212,6 +216,7 @@ public class Gui {
         gamePanel.add(bEndMove);
 
         JButton bEnd = new JButton("End Game");
+        bEnd.setName("EndButton");
         bEnd.setFont(new Font("Arial", Font.PLAIN, 20));
         bEnd.setBounds(980, 600, 300, 50);
         bEnd.addActionListener(e -> nextPanel());

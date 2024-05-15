@@ -11,7 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.assertj.swing.exception.ComponentLookupException;
 
 class RepairmanNotPlacesPipeTest {
 	private DialogFixture window;
@@ -51,7 +50,7 @@ class RepairmanNotPlacesPipeTest {
         assertNull(game.getRepairmanGroup().get(1).getHoldingPipe());
         assertEquals(1, pipe6.getNeighbors().size());
 
-        assertThrows(ComponentLookupException.class, () -> window.button("Cistern2EBPlacePipe").click());
+        assertThrows(ComponentLookupException.class, () -> window.button("Cistern2EBPlacePipe"));
 
         assertEquals(1, pipe6.getNeighbors().size());
     }
