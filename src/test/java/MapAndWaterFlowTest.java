@@ -1,9 +1,7 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,10 +94,10 @@ public class MapAndWaterFlowTest {
     }
 
     @Test
-    @DisplayName("Water Flow Test")
-    public void WaterFlowTest()
+    @DisplayName("Full Water Flow Test")
+    public void FullWaterFlowTest()
     {
-        assertAll("All Pipe and Pump is Empty",
+        assertAll("Stage 1, All Pipe and Pump is Empty",
                 () -> assertFalse(pi1.getContainingWater()),
                 () -> assertFalse(pi2.getContainingWater()),
                 () -> assertFalse(pi3.getContainingWater()),
@@ -107,20 +105,41 @@ public class MapAndWaterFlowTest {
                 () -> assertFalse(p1.getContainingWater()),
                 () -> assertFalse(p2.getContainingWater())
         );
-
         game.SimulateWaterflow();
-        assertAll("",
+        assertAll("Stage 2",
                 () -> assertTrue(pi1.getContainingWater()),
-                () -> assertTrue(pi2.getContainingWater()),//false
                 () -> assertTrue(pi3.getContainingWater()),
-
-
-                () -> assertTrue(p1.getContainingWater()),
+                //True, because on P1 turn W fills pi1 and pi3, and from pi3 water can be extracted
                 () -> assertTrue(p2.getContainingWater()),
 
+                () -> assertFalse(p1.getContainingWater()),
+                () -> assertFalse(pi2.getContainingWater()),
                 () -> assertFalse(pi4.getContainingWater())
         );
 
+        game.SimulateWaterflow();
+        assertAll("Stage 3",
+                () -> assertTrue(pi1.getContainingWater()),
+                () -> assertTrue(pi3.getContainingWater()),
+                () -> assertTrue(p1.getContainingWater()),
+                () -> assertTrue(p2.getContainingWater()),
+                //True, because water can be pumped through a leaking pipe
+                () -> assertTrue(pi4.getContainingWater()),
+
+                //Water haven't reached pi2 yet
+                () -> assertFalse(pi2.getContainingWater())
+
+        );
+        game.SimulateWaterflow();
+        assertAll("Stage 4, System filled with water",
+                () -> assertTrue(pi1.getContainingWater()),
+                () -> assertTrue(pi3.getContainingWater()),
+                () -> assertTrue(p1.getContainingWater()),
+                () -> assertTrue(p2.getContainingWater()),
+                () -> assertTrue(pi2.getContainingWater()),
+                //True, because water can be pumped through a leaking pipe
+                () -> assertTrue(pi4.getContainingWater())
+        );
     }
 
     private void addNeighbor(NonPipe np,Pipe pi)
