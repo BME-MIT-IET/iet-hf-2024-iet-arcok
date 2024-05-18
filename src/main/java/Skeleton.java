@@ -16,7 +16,7 @@ class Skeleton {
 	 */
 	HashMap<Integer, Pair<String, Runnable>> tests = new HashMap<>(); /** A tesztek tárolása. A sám egyértelműen azonosit egy teszt nevet, és a hozzá tartozó metódust */
 	private int selectedMenuItem; /** A kivalasztott teszt szama */
-
+	String holdingPumpString = "holdingPump";
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -141,7 +141,8 @@ class Skeleton {
 		ws.setName("ws");
 		r.setPosition(ws);
 		Pump holdingPump = new Pump();
-		holdingPump.setName("holdingPump");
+
+		holdingPump.setName(holdingPumpString);
 		r.setHoldingPump(holdingPump);
 
 		/** Teszt futtatasa */
@@ -168,7 +169,7 @@ class Skeleton {
 		r.setPosition(position);
 
 		Pump holdingPump = new Pump();
-		holdingPump.setName("holdingPump");
+		holdingPump.setName(holdingPumpString);
 		r.setHoldingPump(holdingPump);
 
 		Pump n1 = new Pump();
@@ -212,7 +213,7 @@ class Skeleton {
 		r.setPosition(position);
 
 		Pump holdingPump = new Pump();
-		holdingPump.setName("holdingPump");
+		holdingPump.setName(holdingPumpString);
 		r.setHoldingPump(holdingPump);
 
 		//Game game = new Game();
