@@ -59,20 +59,22 @@ public class Pipe extends Element implements SaboteurPointSource {
         } else {
             if (slimey > 0) {
                 success = false;
+                String startOfLogText = "Slipped to ";
                 if (neighbors.size() > 1) {
                     Random random = new Random();
+
                     if (random.nextBoolean()) {
                         success = getNeighbors().get(0).accept(c);
-                        Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(0).getName());
+                        Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(0).getName());
                         // System.out.println("Slipped to " + getNeighbors().get(0).getName());
                     } else {
                         success = getNeighbors().get(1).accept(c);
-                        Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(1).getName());
+                        Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(1).getName());
                         // System.out.println("Slipped to " + getNeighbors().get(1).getName());
                     }
                 } else {
                     success = getNeighbors().get(0).accept(c);
-                    Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(0).getName());
+                    Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(0).getName());
                     // System.out.println("Slipped to " + getNeighbors().get(0).getName());
                 }
                 return success;
