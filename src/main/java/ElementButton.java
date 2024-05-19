@@ -18,13 +18,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  * A játék elemeit tartalmazó gombokat reprezentáló osztály.
  */
 public class ElementButton extends JButton{
     private ArrayList<ImageIcon> statusimages = new ArrayList<ImageIcon>();
-    private Element element;
+    private transient Element element;
     public static ArrayList<Pipe> holdingPipes = new ArrayList<Pipe>();
 
     /**
@@ -34,7 +35,7 @@ public class ElementButton extends JButton{
     ElementButton(Element element)
     {
         this.element=element;
-        if(getImageName()!=""){
+        if(!getImageName().isEmpty()){
             try {
                 /** 
                  * Beolvassa a megfelelő képfájlt, es atmeretezi 40x40-re.
@@ -68,9 +69,8 @@ public class ElementButton extends JButton{
             case "Cistern": return "bucket.png";
             case "WaterSource": return "fountain.png";
             case "Pump": return "pump.png";
-            case "Pipe": return "";
+            default: return "";
         }
-        return "";
     }
 
     /**
@@ -101,6 +101,9 @@ public class ElementButton extends JButton{
     private boolean findElementInNeighbors(Element e)
     {
         boolean out = false;
+        if (e == null) {
+            return false;
+        }
         for(Element neighbor : e.getNeighbors())
         {
             if(neighbor==element)
@@ -122,8 +125,9 @@ public class ElementButton extends JButton{
         {
             for(Element neighbor : e.getNeighbors())
             {
-                if(neighbor==element)
-                return index;
+                if(neighbor==element) {
+                    return index;
+                }
                 index++;
             } 
         }
@@ -131,8 +135,9 @@ public class ElementButton extends JButton{
         {
             for(Element neighbor : element.getNeighbors())
             {
-                if(neighbor==e)
-                return index;
+                if(neighbor==e) {
+                    return index;
+                }
                 index++;
             } 
         }
@@ -186,6 +191,7 @@ public class ElementButton extends JButton{
         /** Csak azokat a muveleteket jelenitjuk meg amit az adott karakterrel lehet vegezni.*/
         boolean hasNothing = hasNothingAndRepairMan();
         boolean isRepairman=isRepairman();
+
         /** Letrehozunk egy JPanel objektumot az ActionButton-ok tarolasara*/
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Optional: Add padding
@@ -197,12 +203,7 @@ public class ElementButton extends JButton{
         gbc.insets = new Insets(0, 0, 10, 0); // 10px gap between buttons
 
 
-        ActionListener closeButtonListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        };
+        ActionListener closeButtonListener = e -> dialog.dispose();
         
         /** ActionButton-ok letrehozasa es hozzaadasa a panelhoz*/
         /** Igy beszeltuk meg,de ugye a harom muveleten kivul egyebkent lehetne optimalizalni, hogy ne legyen ilyen brute force*/
@@ -222,14 +223,14 @@ public class ElementButton extends JButton{
         createButton(isRepairman && element.canPerformAction("PickupPump") && place == element && hasNothing, "PickupPump", closeButtonListener, buttonPanel, gbc);
 
         // Ha az elemen végre lehet hajtani cső felvételt, akkor hozzáadunk egy ezt végrehajtó gombot
-        if(isRepairman && element.canPerformAction("PickUpPipe")&&place==element&&hasNothing) {
+        if(isRepairman && element.canPerformAction(Actions.PICKUP_PIPE)&&place==element&&hasNothing) {
             for(Element e : element.getNeighbors())
             {
                 ArrayList<Integer> params = new ArrayList<Integer>();
                 params.add(getElementIndexInNeighbors(e, false));
                 ActionButton pickUpPipe = new ActionButton(params);
-                pickUpPipe.setActionCommand("PickUpPipe");
-                pickUpPipe.setText("PickUpPipe "+e.getName());
+                pickUpPipe.setActionCommand(Actions.PICKUP_PIPE);
+                pickUpPipe.setText(Actions.PICKUP_PIPE + " " + e.getName());
                 pickUpPipe.addActionListener(closeButtonListener);
                 buttonPanel.add(pickUpPipe, gbc);
                 gbc.gridy++;
@@ -275,7 +276,7 @@ public class ElementButton extends JButton{
                 params1.add(getElementIndexInNeighbors(e,false));
                 params1.add(getElementIndexInNeighbors(p.getDest(),false));
                 ActionButton adjustButton1 = new ActionButton(params1);
-                adjustButton1.setActionCommand("Adjust");
+                adjustButton1.setActionCommand(Actions.ADJUST);
                 adjustButton1.setText("Adjust Input to "+e.getName());
                 adjustButton1.addActionListener(closeButtonListener);
                 buttonPanel.add(adjustButton1, gbc);
@@ -285,7 +286,7 @@ public class ElementButton extends JButton{
                 params2.add(getElementIndexInNeighbors(p.getSrc(),false));
                 params2.add(getElementIndexInNeighbors(e,false));
                 ActionButton adjustButton2 = new ActionButton(params2);
-                adjustButton2.setActionCommand("Adjust");
+                adjustButton2.setActionCommand(Actions.ADJUST);
                 adjustButton2.setText("Adjust Output to "+e.getName());
                 adjustButton2.addActionListener(closeButtonListener);
                 buttonPanel.add(adjustButton2, gbc);
@@ -293,6 +294,7 @@ public class ElementButton extends JButton{
             }
         }
     }
+
 
     private void createButton(boolean element, String Stab, ActionListener closeButtonListener, JPanel buttonPanel, GridBagConstraints gbc) {
         if (element) {
@@ -341,7 +343,7 @@ public class ElementButton extends JButton{
         for(Character c : cs){
             JLabel b = new JLabel();
             String imgname;
-            if(c.getClass().getName().equals("Repairman")){
+            if(c instanceof Repairman){
                 imgname = "man-mechanic.png";
                 if(((Repairman)c).hasHoldingPump()){
                     imgname = "man-with-pump.png";
@@ -353,6 +355,7 @@ public class ElementButton extends JButton{
                             case 1: imgname = "man-with-red-pipe.png"; break;
                             case 2: imgname = "man-with-green-pipe.png"; break;
                             case 3: imgname = "man-with-yellow-pipe.png"; break;
+                            default: break;
                         }
                     }
                 }
@@ -364,7 +367,7 @@ public class ElementButton extends JButton{
                 Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                 Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
                 b.setIcon(new ImageIcon(newimg));
-                if(element.getClass().getName().equals("Pipe")){
+                if(element instanceof Pipe){
                     b.setBounds(20, 20, 20, 20);
                 }else{
                     b.setBounds(offset, 0, 20, 20);
@@ -377,7 +380,7 @@ public class ElementButton extends JButton{
         }
 
         // Állapotok ha pumpa
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump e = (Pump)element;
             if(e.getBroken()){
                 JLabel b = new JLabel();
@@ -406,7 +409,7 @@ public class ElementButton extends JButton{
         } 
 
         // Állapotok ha cső
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
 
             Pipe e = (Pipe)element;
             if(e.getHoleOnPipe()){
@@ -463,10 +466,11 @@ public class ElementButton extends JButton{
                         case 1: imgname = "red-pipe.png"; break;
                         case 2: imgname = "green-pipe.png"; break;
                         case 3: imgname = "yellow-pipe.png"; break;
+                        default: break;
                     }
                 }
                 JLabel b = new JLabel();
-                if(imgname!=""){
+                if(!imgname.isEmpty()){
                     try {
                         Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                         Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
@@ -491,7 +495,7 @@ public class ElementButton extends JButton{
      * @return
      */
     public ArrayList<ElementButton> getNeighboursElementButton(ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
             List<Element> es = (List<Element>) element.getNeighbors();
             ArrayList<ElementButton> toReturn = new ArrayList<ElementButton>();
             for(Element eiter : es){
@@ -514,7 +518,7 @@ public class ElementButton extends JButton{
      * @param eb - Az összes UI elementButton elem.
      */
     public void drawWaterFlowDirection(Graphics g, ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump p = (Pump)element;
             Element src = p.getSrc();
             Element dest = p.getDest();
@@ -524,9 +528,9 @@ public class ElementButton extends JButton{
             Graphics2D g2 = (Graphics2D)g;
             g2.setStroke(new BasicStroke(2));
             g2.setColor(Color.GREEN);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
             g2.setColor(Color.RED);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
         }
     }
 

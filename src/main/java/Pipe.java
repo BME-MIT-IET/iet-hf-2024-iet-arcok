@@ -13,6 +13,7 @@ public class Pipe extends Element implements SaboteurPointSource {
     private int sticky;
     private int slimey;
     private List<NonPipe> neighbors;
+    private Random random = new Random();
 
     /**
      * @author Szikszai Levente
@@ -60,7 +61,6 @@ public class Pipe extends Element implements SaboteurPointSource {
                 String startOfLogText = "Slipped to ";
                 if (neighbors.size() > 1) {
                     Random random = new Random();
-
                     if (random.nextBoolean()) {
                         success = getNeighbors().get(0).accept(c);
                         Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(0).getName());
@@ -156,6 +156,10 @@ public class Pipe extends Element implements SaboteurPointSource {
             Control.getInstance().appendToLog("No placable pump");
         }
         n = (NonPipe) getNeighbors().get(0);
+        if (holdingPump == null) {
+            Control.getInstance().appendToLog("HoldingPump is null, can't place it.");
+            return null;
+        }
         if (n != null) {
             removeNeighbor(n);
             n.removeNeighbor(this);
@@ -186,7 +190,7 @@ public class Pipe extends Element implements SaboteurPointSource {
     @Override
     public Pipe lift(int dir) {
         try {
-            if (neighbors.size() == 1 && neighbors.get(0).getClass().getName().equals("Cistern")) {
+            if (neighbors.size() == 1 && neighbors.get(0) instanceof Cistern) {
                 return this;
             }
         } catch (IndexOutOfBoundsException e) {
