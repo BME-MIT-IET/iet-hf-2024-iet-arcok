@@ -115,18 +115,22 @@ public class Gui {
                     ElementButton eb = elementButtons.get(i);
                     ArrayList<ElementButton> neigh = eb.getNeighboursElementButton(elementButtons);
                     if(neigh != null){
-                        if(neigh.size()==2 && neigh.get(0).equals(neigh.get(1))){
-                            drawLineBetweenButtons(eb, neigh.get(0), Color.BLACK, g, true);
-                        }else{
-                            for(ElementButton n : neigh){
-                                drawLineBetweenButtons(eb, n, Color.BLACK, g, false);
-                            }
-                        }
+                        drawLinesBetweenButtons(g, neigh, eb);
                     }
                 }
                 for(int i = 0; i < elementButtons.size(); i++){
                     ElementButton eb = elementButtons.get(i);
                     eb.drawWaterFlowDirection(g, elementButtons);
+                }
+            }
+
+            private void drawLinesBetweenButtons(Graphics g, ArrayList<ElementButton> neigh, ElementButton eb) {
+                if(neigh.size()==2 && neigh.get(0).equals(neigh.get(1))){
+                    drawLineBetweenButtons(eb, neigh.get(0), Color.BLACK, g, true);
+                }else{
+                    for(ElementButton n : neigh){
+                        drawLineBetweenButtons(eb, n, Color.BLACK, g, false);
+                    }
                 }
             }
         };
