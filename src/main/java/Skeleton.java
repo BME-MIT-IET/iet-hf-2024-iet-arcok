@@ -23,7 +23,7 @@ class Skeleton {
 	String beginString = "1.1 BEGIN->";
 	String endString = "END<-%s";
 	String skeletonString = "Skeleton->";
-	String 
+	String addNeighborString =  ".addNeighbor(";
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -376,28 +376,28 @@ class Skeleton {
 		}
 		if (isConnectedToSource.equals("I")) {
 			Tabulator.printTab();
-			System.out.println(skeletonString + holdingPipe.getName() + ".addNeighbor(" + position.getName() + ")");
+			System.out.println(skeletonString + holdingPipe.getName() + addNeighborString + position.getName() + ")");
 			holdingPipe.addNeighbor(position);
 			Tabulator.printTab();
-			System.out.println("<-" + holdingPipe.getName() + ".addNeighbor(" + position.getName() + ")");
+			System.out.println("<-" + holdingPipe.getName() + addNeighborString + position.getName() + ")");
 
 			Tabulator.printTab();
-			System.out.println(skeletonString + position.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println(skeletonString + position.getName() + addNeighborString + holdingPipe.getName() + ")");
 			position.addNeighbor(holdingPipe);
 			Tabulator.printTab();
-			System.out.println("<-" + position.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println("<-" + position.getName() + addNeighborString + holdingPipe.getName() + ")");
 		} else {
 			Tabulator.printTab();
-			System.out.println(skeletonString + holdingPipe.getName() + ".addNeighbor(" + Pump1.getName() + ")");
+			System.out.println(skeletonString + holdingPipe.getName() + addNeighborString + Pump1.getName() + ")");
 			holdingPipe.addNeighbor(Pump1);
 			Tabulator.printTab();
-			System.out.println("<-" + holdingPipe.getName() + ".addNeighbor(" + Pump1.getName() + ")");
+			System.out.println("<-" + holdingPipe.getName() + addNeighborString + Pump1.getName() + ")");
 
 			Tabulator.printTab();
-			System.out.println(skeletonString + Pump1.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println(skeletonString + Pump1.getName() + addNeighborString + holdingPipe.getName() + ")");
 			Pump1.addNeighbor(holdingPipe);
 			Tabulator.printTab();
-			System.out.println("<-" + Pump1.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println("<-" + Pump1.getName() + addNeighborString + holdingPipe.getName() + ")");
 		}
 		sc.close();
 
