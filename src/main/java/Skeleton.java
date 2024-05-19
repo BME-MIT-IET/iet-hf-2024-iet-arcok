@@ -19,7 +19,9 @@ class Skeleton {
 	String holdingPumpString = "holdingPump";
 	String placePumpString= ".placePump()";
 	String positionString = "position";
-
+	String repairElementString = ".repairElement()";
+	String beginString = "1.1 BEGIN->";
+	String endString = "END<-%s";
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -149,9 +151,10 @@ class Skeleton {
 		r.setHoldingPump(holdingPump);
 
 		/** Teszt futtatasa */
-		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
+
+		System.out.println(String.format(s + "%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
+		System.out.println(String.format(endString + placePumpString, r.getName()));
 	}
 
 	/**
@@ -194,7 +197,7 @@ class Skeleton {
 		/** Teszt futtatasa */
 		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
+		System.out.println(String.format(endString + placePumpString, r.getName()));
 	}
 
 	/**
@@ -226,7 +229,7 @@ class Skeleton {
 		/** Teszt futtatasa */
 		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
+		System.out.println(String.format(endString + placePumpString, r.getName()));
 	}
 
 	/**
@@ -264,9 +267,9 @@ class Skeleton {
 		r1.setPosition(p1);
 
 		/** Teszt futtatasa */
-		System.out.println("1.1 BEGIN->" + r1.getName() + ".repairElement()");
+		System.out.println(beginString + r1.getName() + repairElementString);
 		r1.RepairElement();
-		System.out.print("END<-" + p1.getName() + ".repairElement()");
+		System.out.print("END<-" + p1.getName() + repairElementString);
 
 	}
 
@@ -288,9 +291,9 @@ class Skeleton {
 		r1.setPosition(p1);
 
 		/** Teszt futtatasa */
-		System.out.println("1.1 BEGIN->" + p1.getName() + ".repairElement()\n\t");
+		System.out.println(beginString + p1.getName() + ".repairElement()\n\t");
 		r1.RepairElement();
-		System.out.print("END<-" + p1.getName() + ".repairElement()");
+		System.out.print("END<-" + p1.getName() + repairElementString);
 	}
 
 	/**
