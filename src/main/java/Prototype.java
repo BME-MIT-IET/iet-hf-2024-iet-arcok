@@ -23,7 +23,7 @@ public class Prototype {
     Character currentCharacter;
     int currentCharacterInt = 0;
     int ac = 0; //* ActionCounter */
-
+    String mapDeclarationString = "mapdeclarations/";
 	private String selectedMenuItem; /** A kivalasztott parancs */
 
     /**
@@ -106,7 +106,7 @@ public class Prototype {
         cisterns.clear();
         pumps.clear();
 
-        File f = new File("mapdeclarations/"+file+".txt");
+        File f = new File(mapDeclarationString+file+".txt");
         try 
         {
             int readPhase = 0;
@@ -325,7 +325,7 @@ public class Prototype {
         PrintWriter pw;
         try 
         {
-            File f = new File("mapdeclarations/"+file+".txt");
+            File f = new File(mapDeclarationString+file+".txt");
             pw = new PrintWriter(f);
             ArrayList<Element> gameElements = Game.getInstance().getGameElements();
             pw.println("###Declaration###");
@@ -357,7 +357,7 @@ public class Prototype {
             }
             pw.close();
             
-            f = new File("mapdeclarations/"+file+"Points.txt");
+            f = new File(mapDeclarationString+file+"Points.txt");
             pw = new PrintWriter(f);
             pw.println(Game.getInstance().toString());
             pw.close();
