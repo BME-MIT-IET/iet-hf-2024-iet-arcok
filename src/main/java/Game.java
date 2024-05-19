@@ -76,7 +76,7 @@ public class Game {
 	 * @param pumps A pumpákat tartalmazó lista
 	 */
 	
-	public void load(ArrayList<Element> gameE,ArrayList<SaboteurPointSource> SabPointSources,ArrayList<Cistern> cis,
+	public synchronized void load(ArrayList<Element> gameE,ArrayList<SaboteurPointSource> SabPointSources,ArrayList<Cistern> cis,
 	ArrayList<Repairman> repairmanG,ArrayList<Saboteur> saboteurG, int repPoints, int sabPoints, int rounds, int _slimey, int _sticky, ArrayList<Pump> pumps)
 	{
 		repairmanGroup=repairmanG;
@@ -89,7 +89,6 @@ public class Game {
 		remainingRounds=rounds;
 		slimey = _slimey;
 		sticky = _sticky;
-		this.initialize();
 
 		timer.resetPumps();
 		for(Pump p : pumps)
@@ -145,14 +144,6 @@ public class Game {
 	public ArrayList<Saboteur> getSaboteurGroup()
 	{
 		return saboteurGroup;
-	}
-
-	/**
-	 * Létrehozza a pályát.
-	 */
-	public void initialize()
-	{
-		
 	}
 	
 	/**

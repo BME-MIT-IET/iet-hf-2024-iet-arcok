@@ -125,7 +125,7 @@ public class Control {
      */
     public void EndMove(){
         updateFrame();
-        Game.getInstance().getCurrentCharacter().WakeUp();
+        Game.getInstance().getCurrentCharacter().wakeUp();
     }
 
     /**
