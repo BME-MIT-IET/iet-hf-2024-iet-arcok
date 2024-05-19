@@ -18,6 +18,8 @@ class Skeleton {
 	private int selectedMenuItem; /** A kivalasztott teszt szama */
 	String holdingPumpString = "holdingPump";
 	String placePumpString= ".placePump()";
+	String positionString = "position";
+
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -166,7 +168,7 @@ class Skeleton {
 		r.setName("r");
 
 		Pipe position = new Pipe();
-		position.setName("position");
+		position.setName(positionString);
 		r.setPosition(position);
 
 		Pump holdingPump = new Pump();
@@ -210,7 +212,7 @@ class Skeleton {
 		r.setName("r");
 
 		Pipe position = new Pipe();
-		position.setName("position");
+		position.setName(positionString);
 		r.setPosition(position);
 
 		Pump holdingPump = new Pump();
@@ -355,7 +357,7 @@ class Skeleton {
 		// Input
 		Pump1.setName("Pump1");
 		holdingPipe.setName("holdingPipe");
-		position.setName("position");
+		position.setName(positionString);
 		Repairman1.setName("Repairman1");
 		
 		//Input
@@ -412,7 +414,7 @@ class Skeleton {
 		/** Inicializalas */
 		System.out.println("11. RepairmanLiftsPipe");
 		Pump position = new Pump();
-		position.setName("position");
+		position.setName(positionString);
 		Pipe n = new Pipe();
 		n.setName("n");
 		position.addNeighbor(n);
@@ -435,7 +437,7 @@ class Skeleton {
 		/** Inicializalas */
 		System.out.println("12. RepairmanPlacingPipe");
 		Pump position = new Pump();
-		position.setName("position");
+		position.setName(positionString);
 		Pipe n = new Pipe();
 		n.setName("n");
 		position.addNeighbor(n);
