@@ -111,12 +111,10 @@ public class Game {
 		if(random==true)
 		{
 			Control.getInstance().appendToLog("Random events Enabled");
-			//System.out.println("Random events Enabled");
 		}
 		else 
 		{
 			Control.getInstance().appendToLog("Random events Disabled");
-			//System.out.println("Random events Disabled");
 		}
 	}
 
@@ -162,22 +160,18 @@ public class Game {
 	{
 		while(remainingRounds>0)
 		{
-			//System.out.println("Sab: "+saboteurGroup.size());
 			for(int i = 0;i<saboteurGroup.size();i++)
 			{
 				currentCharacter=saboteurGroup.get(i);
 				currentCharacter.resetRemainingSteps();
 				saboteurGroup.get(i).step();
 				endTurn();
-				//System.out.println(currentCharacter.getName());
 			}
-			//System.out.println("Rep: "+repairmanGroup.size());
 			for(int i = 0;i<repairmanGroup.size();i++)
 			{
 				currentCharacter=repairmanGroup.get(i);
 				repairmanGroup.get(i).step();
 				endTurn();
-				//System.out.println(currentCharacter.getName());
 			}
 			remainingRounds--;
 		}
@@ -235,8 +229,6 @@ public class Game {
 	 */
 	public void SimulateWaterflow()
 	{
-		//Tabulator.increaseTab();
-		//Tabulator.printTab();
 		for(int i = 0;i<cisterns.size();i++)
 		{
 			cisterns.get(i).step();
@@ -249,7 +241,6 @@ public class Game {
 	 */
 	public void addCistern(Cistern c)
 	{
-		//System.out.println("addCistern");
 		cisterns.add(c);
 		gameElements.add(c);
 	}
@@ -260,7 +251,6 @@ public class Game {
 	 */
 	public void addElement(Element e)
 	{
-		//System.out.println("addEmelent");
 		gameElements.add(e);
 	}
 	
@@ -270,7 +260,6 @@ public class Game {
 	 */
 	public ArrayList<Element> getGameElements()//Jó lesz-e ArrayList??
 	{
-		//System.out.println("getGameElements");
 		return gameElements;
 	}
 	
@@ -281,7 +270,6 @@ public class Game {
 	public void addSaboteur(Saboteur sab)
 	{
 		saboteurGroup.add(sab);
-		//System.out.println("addSaboteur");
 	}
 	
 	/**
@@ -291,7 +279,6 @@ public class Game {
 	public void addRepairman(Repairman rep)
 	{
 		repairmanGroup.add(rep);
-		//System.out.println("addRepairman");
 	}
 	
 	/**
@@ -300,7 +287,6 @@ public class Game {
 	 */
 	public void addPipe(Pipe p)
 	{
-		//System.out.println("addPipe");
 		saboteurPointSources.add(p);
 		gameElements.add(p);//Ez kell-e??
 	}
@@ -310,7 +296,6 @@ public class Game {
 	 */
 	public void calculatePoints()
 	{
-		//System.out.println("calculatePoints");
 		for(int i = 0;i<cisterns.size();i++)
 		{
 			repairmanPoints+= cisterns.get(i).measureAndResetWaterFlown();
@@ -328,7 +313,6 @@ public class Game {
 	 */
 	public void addPump(Pump p)
 	{
-		//System.out.println("addPump");
 		saboteurPointSources.add(p);
 		gameElements.add(p);//Ez kell-e??
 		timer.addPump(p);
@@ -377,7 +361,6 @@ public class Game {
 	public void setTurns(int turns)
 	{
 		this.remainingRounds = turns;
-		//System.out.println("Turn set: "+turns);
 	}
 
 	/** Hátralevő körök beállítása */
