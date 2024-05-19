@@ -22,6 +22,8 @@ class Skeleton {
 	String repairElementString = ".repairElement()";
 	String beginString = "1.1 BEGIN->";
 	String endString = "END<-%s";
+	String skeletonString = "Skeleton->";
+	String 
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -333,7 +335,8 @@ class Skeleton {
 		Pipe2.damage();
 
 		// Teszt
-		System.out.print("Skeleton->");
+
+		System.out.print(skeletonString);
 		game.SimulateWaterflow();
 		System.out.print("END<-Skeleton.SimulateWaterflow()");
 	}
@@ -373,25 +376,25 @@ class Skeleton {
 		}
 		if (isConnectedToSource.equals("I")) {
 			Tabulator.printTab();
-			System.out.println("Skeleton->" + holdingPipe.getName() + ".addNeighbor(" + position.getName() + ")");
+			System.out.println(skeletonString + holdingPipe.getName() + ".addNeighbor(" + position.getName() + ")");
 			holdingPipe.addNeighbor(position);
 			Tabulator.printTab();
 			System.out.println("<-" + holdingPipe.getName() + ".addNeighbor(" + position.getName() + ")");
 
 			Tabulator.printTab();
-			System.out.println("Skeleton->" + position.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println(skeletonString + position.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
 			position.addNeighbor(holdingPipe);
 			Tabulator.printTab();
 			System.out.println("<-" + position.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
 		} else {
 			Tabulator.printTab();
-			System.out.println("Skeleton->" + holdingPipe.getName() + ".addNeighbor(" + Pump1.getName() + ")");
+			System.out.println(skeletonString + holdingPipe.getName() + ".addNeighbor(" + Pump1.getName() + ")");
 			holdingPipe.addNeighbor(Pump1);
 			Tabulator.printTab();
 			System.out.println("<-" + holdingPipe.getName() + ".addNeighbor(" + Pump1.getName() + ")");
 
 			Tabulator.printTab();
-			System.out.println("Skeleton->" + Pump1.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
+			System.out.println(skeletonString + Pump1.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
 			Pump1.addNeighbor(holdingPipe);
 			Tabulator.printTab();
 			System.out.println("<-" + Pump1.getName() + ".addNeighbor(" + holdingPipe.getName() + ")");
@@ -401,7 +404,7 @@ class Skeleton {
 		// Teszt
 
 		Tabulator.printTab();
-		System.out.println("Skeleton->"+Repairman1.getName()+".PlacePipe()");
+		System.out.println(skeletonString+Repairman1.getName()+".PlacePipe()");
 		Repairman1.PlacePipe();
 
 		System.out.println("END<-Skeleton.WaterSourceHandlingAPipe()");
