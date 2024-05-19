@@ -17,6 +17,7 @@ class Skeleton {
 	HashMap<Integer, Pair<String, Runnable>> tests = new HashMap<>(); /** A tesztek tárolása. A sám egyértelműen azonosit egy teszt nevet, és a hozzá tartozó metódust */
 	private int selectedMenuItem; /** A kivalasztott teszt szama */
 	String holdingPumpString = "holdingPump";
+	String placePumpString= ".placePump()";
 	// Konstruktor
 	Skeleton() {
 		System.out.println("Skeleton created!");
@@ -146,9 +147,9 @@ class Skeleton {
 		r.setHoldingPump(holdingPump);
 
 		/** Teszt futtatasa */
-		System.out.println(String.format("1.1 BEGIN->%s.placePump()", r.getName()));
+		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s.placePump()", r.getName()));
+		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
 	}
 
 	/**
@@ -189,9 +190,9 @@ class Skeleton {
 		//game.addPump(n2);
 
 		/** Teszt futtatasa */
-		System.out.println(String.format("1.1 BEGIN->%s.placePump()", r.getName()));
+		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s.placePump()", r.getName()));
+		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
 	}
 
 	/**
@@ -221,9 +222,9 @@ class Skeleton {
 		//game.addPipe(position);
 
 		/** Teszt futtatasa */
-		System.out.println(String.format("1.1 BEGIN->%s.placePump()", r.getName()));
+		System.out.println(String.format("1.1 BEGIN->%s" + placePumpString, r.getName()));
 		r.PlacePump();
-		System.out.println(String.format("END<-%s.placePump()", r.getName()));
+		System.out.println(String.format("END<-%s" + placePumpString, r.getName()));
 	}
 
 	/**
