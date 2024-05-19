@@ -439,25 +439,7 @@ public class Gui {
         if(activePanel == menuPanel){
             activePanel = gamePanel;
             int playerc = (Integer)sPlayerCount.getValue();
-            for(int i = 0; i < playerc; i++){
-                if(i%2==0){
-                    Repairman c;
-                    Element e1 = Game.getInstance().getGameElements().get(3);
-                    c = new Repairman(e1, null, null);
-                    if(i==0) c = new Repairman(e1, null, new Pump());
-                    if(i==2) c = new Repairman(e1, pi6, null);
-                    c.setName("Repairman"+repairmanNum++);
-                    e1.addStandingOn(c);
-                    Game.getInstance().addRepairman((Repairman)c);
-                }else{
-                    Saboteur c;
-                    Element e2 = Game.getInstance().getGameElements().get(4);
-                    c = new Saboteur(e2);
-                    c.setName("Saboteur"+saboteurNum++);
-                    e2.addStandingOn(c);
-                    Game.getInstance().addSaboteur((Saboteur)c);
-                }
-            }
+             createPlayers(playerc);
             Game.getInstance().setCurrentCharacter(Game.getInstance().getSaboteurGroup().get(0));
             //CurrentCharacter inicializálása, hogy helyesen jelenjen meg kezdéskor
             updateFrame();
@@ -492,6 +474,28 @@ public class Gui {
         }
         frame.getContentPane().add(activePanel);
         frame.setVisible(true);
+    }
+
+    private void createPlayers(int playerc) {
+        for(int i = 0; i < playerc; i++){
+            if(i%2==0){
+                Repairman c;
+                Element e1 = Game.getInstance().getGameElements().get(3);
+                c = new Repairman(e1, null, null);
+                if(i==0) c = new Repairman(e1, null, new Pump());
+                if(i==2) c = new Repairman(e1, pi6, null);
+                c.setName("Repairman"+repairmanNum++);
+                e1.addStandingOn(c);
+                Game.getInstance().addRepairman((Repairman)c);
+            }else{
+                Saboteur c;
+                Element e2 = Game.getInstance().getGameElements().get(4);
+                c = new Saboteur(e2);
+                c.setName("Saboteur"+saboteurNum++);
+                e2.addStandingOn(c);
+                Game.getInstance().addSaboteur((Saboteur)c);
+            }
+        }
     }
 
     /**

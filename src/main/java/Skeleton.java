@@ -154,7 +154,7 @@ class Skeleton {
 
 		/** Teszt futtatasa */
 
-		System.out.println(String.format(s + "%s" + placePumpString, r.getName()));
+		System.out.println(String.format(beginString + "%s" + placePumpString, r.getName()));
 		r.PlacePump();
 		System.out.println(String.format(endString + placePumpString, r.getName()));
 	}
