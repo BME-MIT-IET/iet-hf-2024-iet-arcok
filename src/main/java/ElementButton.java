@@ -191,6 +191,7 @@ public class ElementButton extends JButton{
         /** Csak azokat a muveleteket jelenitjuk meg amit az adott karakterrel lehet vegezni.*/
         boolean hasNothing = hasNothingAndRepairMan();
         boolean isRepairman=isRepairman();
+
         /** Letrehozunk egy JPanel objektumot az ActionButton-ok tarolasara*/
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Optional: Add padding
