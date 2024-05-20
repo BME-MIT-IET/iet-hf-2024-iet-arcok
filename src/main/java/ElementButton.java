@@ -18,13 +18,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  * A játék elemeit tartalmazó gombokat reprezentáló osztály.
  */
 public class ElementButton extends JButton{
     private ArrayList<ImageIcon> statusimages = new ArrayList<ImageIcon>();
-    private Element element;
+    private transient Element element;
     public static ArrayList<Pipe> holdingPipes = new ArrayList<Pipe>();
 
     /**
@@ -34,7 +35,7 @@ public class ElementButton extends JButton{
     ElementButton(Element element)
     {
         this.element=element;
-        if(getImageName()!=""){
+        if(!getImageName().isEmpty()){
             try {
                 /** 
                  * Beolvassa a megfelelő képfájlt, es atmeretezi 40x40-re.
@@ -68,9 +69,8 @@ public class ElementButton extends JButton{
             case "Cistern": return "bucket.png";
             case "WaterSource": return "fountain.png";
             case "Pump": return "pump.png";
-            case "Pipe": return "";
+            default: return "";
         }
-        return "";
     }
 
     /**
@@ -101,6 +101,9 @@ public class ElementButton extends JButton{
     private boolean findElementInNeighbors(Element e)
     {
         boolean out = false;
+        if (e == null) {
+            return false;
+        }
         for(Element neighbor : e.getNeighbors())
         {
             if(neighbor==element)
@@ -122,8 +125,9 @@ public class ElementButton extends JButton{
         {
             for(Element neighbor : e.getNeighbors())
             {
-                if(neighbor==element)
-                return index;
+                if(neighbor==element) {
+                    return index;
+                }
                 index++;
             } 
         }
@@ -131,8 +135,9 @@ public class ElementButton extends JButton{
         {
             for(Element neighbor : element.getNeighbors())
             {
-                if(neighbor==e)
-                return index;
+                if(neighbor==e) {
+                    return index;
+                }
                 index++;
             } 
         }
@@ -143,7 +148,7 @@ public class ElementButton extends JButton{
         dialog.setTitle("Valassz a muveletek kozul");
         dialog.setModal(true);
         dialog.setLocation(400, 200);
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
     private boolean isOutOfActions() {
         if (Game.getInstance().getCurrentCharacter().getRemainingSteps() == 0) {
@@ -153,7 +158,7 @@ public class ElementButton extends JButton{
         return false;
     }
     private boolean isRepairman() {
-        return Game.getInstance().getCurrentCharacter().getClass().getName().equals("Repairman");
+        return Game.getInstance().getCurrentCharacter() instanceof Repairman;
     }
 
     private Repairman getCurrentRepairman() {
@@ -197,12 +202,7 @@ public class ElementButton extends JButton{
         gbc.insets = new Insets(0, 0, 10, 0); // 10px gap between buttons
 
 
-        ActionListener closeButtonListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        };
+        ActionListener closeButtonListener = e -> dialog.dispose();
         
         /** ActionButton-ok letrehozasa es hozzaadasa a panelhoz*/
         /** Igy beszeltuk meg,de ugye a harom muveleten kivul egyebkent lehetne optimalizalni, hogy ne legyen ilyen brute force*/
@@ -210,26 +210,26 @@ public class ElementButton extends JButton{
         getAndCreateMoveButton(place, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani lyukasztást, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(element.canPerformAction("Stab") && place == element, "Stab", closeButtonListener, buttonPanel, gbc);
+        createButton(element.canPerformAction(Actions.STAB) && place == element, Actions.STAB, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani pumpa lerakást, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(isRepairman && element.canPerformAction("PlacePump") && place == element && ((Repairman) Game.getInstance().getCurrentCharacter()).hasHoldingPump(), "PlacePump", closeButtonListener, buttonPanel, gbc);
+        createButton(isRepairman && element.canPerformAction(Actions.PLACE_PUMP) && place == element && ((Repairman) Game.getInstance().getCurrentCharacter()).hasHoldingPump(), Actions.PLACE_PUMP, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani cső lerakást, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(isRepairman && element.canPerformAction("PlacePipe") && place == element && ((Repairman) Game.getInstance().getCurrentCharacter()).getHoldingPipe() != null, "PlacePipe", closeButtonListener, buttonPanel, gbc);
+        createButton(isRepairman && element.canPerformAction(Actions.PLACE_PIPE) && place == element && ((Repairman) Game.getInstance().getCurrentCharacter()).getHoldingPipe() != null, Actions.PLACE_PIPE, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani pumpa felvételt, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(isRepairman && element.canPerformAction("PickupPump") && place == element && hasNothing, "PickupPump", closeButtonListener, buttonPanel, gbc);
+        createButton(isRepairman && element.canPerformAction(Actions.PICKUP_PUMP) && place == element && hasNothing, Actions.PICKUP_PUMP, closeButtonListener, buttonPanel, gbc);
 
         // Ha az elemen végre lehet hajtani cső felvételt, akkor hozzáadunk egy ezt végrehajtó gombot
-        if(isRepairman && element.canPerformAction("PickUpPipe")&&place==element&&hasNothing) {
+        if(isRepairman && element.canPerformAction(Actions.PICKUP_PIPE)&&place==element&&hasNothing) {
             for(Element e : element.getNeighbors())
             {
                 ArrayList<Integer> params = new ArrayList<Integer>();
                 params.add(getElementIndexInNeighbors(e, false));
                 ActionButton pickUpPipe = new ActionButton(params);
-                pickUpPipe.setActionCommand("PickUpPipe");
-                pickUpPipe.setText("PickUpPipe "+e.getName());
+                pickUpPipe.setActionCommand(Actions.PICKUP_PIPE);
+                pickUpPipe.setText(Actions.PICKUP_PIPE + " " + e.getName());
                 pickUpPipe.addActionListener(closeButtonListener);
                 buttonPanel.add(pickUpPipe, gbc);
                 gbc.gridy++;
@@ -237,21 +237,21 @@ public class ElementButton extends JButton{
         }
         
         //Ha az elemen végre lehet hajtani javítást, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(isRepairman && element.canPerformAction("Repair") && place == element && (element.getClass().getName().equals("Pump") && ((Pump) element).getBroken() || element.getClass().getName().equals("Pipe") && ((Pipe) element).getHoleOnPipe()), "Repair", closeButtonListener, buttonPanel, gbc);
+        createButton(isRepairman && element.canPerformAction(Actions.REPAIR) && place == element && (element instanceof Pump && ((Pump) element).getBroken() || element instanceof Pipe && ((Pipe) element).getHoleOnPipe()), Actions.REPAIR, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani ragadossá tételt, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(element.canPerformAction("Stick") && place == element, "Stick", closeButtonListener, buttonPanel, gbc);
+        createButton(element.canPerformAction(Actions.STICK) && place == element, Actions.STICK, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani csúszóssá tételt, akkor hozzáadunk egy ezt végrehajtó gombot
-        createButton(!isRepairman && element.canPerformAction("Slime") && place == element, "Slime", closeButtonListener, buttonPanel, gbc);
+        createButton(!isRepairman && element.canPerformAction(Actions.SLIME) && place == element, Actions.SLIME, closeButtonListener, buttonPanel, gbc);
 
         //Ha az elemen végre lehet hajtani be és kimenet állítást, akkor hozzáadunk ezeket végrehajtó gombokat
         createInputAndOutputSetButtons(place, closeButtonListener, buttonPanel, gbc);
 
         //Karakter körének véget vető gomb
         ActionButton endMoveButton = new ActionButton(null);
-        endMoveButton.setActionCommand("EndMove");
-        endMoveButton.setText("EndMove");
+        endMoveButton.setActionCommand(Actions.END_MOVE);
+        endMoveButton.setText(Actions.END_MOVE);
         endMoveButton.addActionListener(closeButtonListener);
         buttonPanel.add(endMoveButton, gbc);  
         
@@ -267,7 +267,7 @@ public class ElementButton extends JButton{
     }
 
     private void createInputAndOutputSetButtons(Element place, ActionListener closeButtonListener, JPanel buttonPanel, GridBagConstraints gbc) {
-        if(element.canPerformAction("Adjust")&& place ==element) {
+        if(element.canPerformAction(Actions.ADJUST)&& place ==element) {
             for(Element e:element.getNeighbors())
             {
                 ArrayList<Integer> params1 = new ArrayList<Integer>();
@@ -275,7 +275,7 @@ public class ElementButton extends JButton{
                 params1.add(getElementIndexInNeighbors(e,false));
                 params1.add(getElementIndexInNeighbors(p.getDest(),false));
                 ActionButton adjustButton1 = new ActionButton(params1);
-                adjustButton1.setActionCommand("Adjust");
+                adjustButton1.setActionCommand(Actions.ADJUST);
                 adjustButton1.setText("Adjust Input to "+e.getName());
                 adjustButton1.addActionListener(closeButtonListener);
                 buttonPanel.add(adjustButton1, gbc);
@@ -285,7 +285,7 @@ public class ElementButton extends JButton{
                 params2.add(getElementIndexInNeighbors(p.getSrc(),false));
                 params2.add(getElementIndexInNeighbors(e,false));
                 ActionButton adjustButton2 = new ActionButton(params2);
-                adjustButton2.setActionCommand("Adjust");
+                adjustButton2.setActionCommand(Actions.ADJUST);
                 adjustButton2.setText("Adjust Output to "+e.getName());
                 adjustButton2.addActionListener(closeButtonListener);
                 buttonPanel.add(adjustButton2, gbc);
@@ -314,7 +314,7 @@ public class ElementButton extends JButton{
     }
 
     private void checkAndCreateMoveButton(Element place, ActionListener closeButtonListener, JPanel buttonPanel, GridBagConstraints gbc) {
-        if(element.canPerformAction("Move"))
+        if(element.canPerformAction(Actions.MOVE))
         {
             createMoveButton(place, closeButtonListener, buttonPanel, gbc);
         }
@@ -324,8 +324,8 @@ public class ElementButton extends JButton{
         ArrayList<Integer> params = new ArrayList<Integer>();
         params.add(getElementIndexInNeighbors(place,true));
         ActionButton moveButton = new ActionButton(params);
-        moveButton.setActionCommand("Move");
-        moveButton.setText("Move");
+        moveButton.setActionCommand(Actions.MOVE);
+        moveButton.setText(Actions.MOVE);
         moveButton.addActionListener(closeButtonListener);
         buttonPanel.add(moveButton, gbc);
         gbc.gridy++;
@@ -341,7 +341,7 @@ public class ElementButton extends JButton{
         for(Character c : cs){
             JLabel b = new JLabel();
             String imgname;
-            if(c.getClass().getName().equals("Repairman")){
+            if(c instanceof Repairman){
                 imgname = "man-mechanic.png";
                 if(((Repairman)c).hasHoldingPump()){
                     imgname = "man-with-pump.png";
@@ -353,6 +353,7 @@ public class ElementButton extends JButton{
                             case 1: imgname = "man-with-red-pipe.png"; break;
                             case 2: imgname = "man-with-green-pipe.png"; break;
                             case 3: imgname = "man-with-yellow-pipe.png"; break;
+                            default: break;
                         }
                     }
                 }
@@ -364,7 +365,7 @@ public class ElementButton extends JButton{
                 Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                 Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
                 b.setIcon(new ImageIcon(newimg));
-                if(element.getClass().getName().equals("Pipe")){
+                if(element instanceof Pipe){
                     b.setBounds(20, 20, 20, 20);
                 }else{
                     b.setBounds(offset, 0, 20, 20);
@@ -377,7 +378,7 @@ public class ElementButton extends JButton{
         }
 
         // Állapotok ha pumpa
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump e = (Pump)element;
             if(e.getBroken()){
                 JLabel b = new JLabel();
@@ -406,7 +407,7 @@ public class ElementButton extends JButton{
         } 
 
         // Állapotok ha cső
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
 
             Pipe e = (Pipe)element;
             if(e.getHoleOnPipe()){
@@ -463,10 +464,11 @@ public class ElementButton extends JButton{
                         case 1: imgname = "red-pipe.png"; break;
                         case 2: imgname = "green-pipe.png"; break;
                         case 3: imgname = "yellow-pipe.png"; break;
+                        default: break;
                     }
                 }
                 JLabel b = new JLabel();
-                if(imgname!=""){
+                if(!imgname.isEmpty()){
                     try {
                         Image img = ImageIO.read(getClass().getResource("img/" + imgname));
                         Image newimg = img.getScaledInstance( 20, 20,  java.awt.Image.SCALE_SMOOTH ) ;
@@ -491,7 +493,7 @@ public class ElementButton extends JButton{
      * @return
      */
     public ArrayList<ElementButton> getNeighboursElementButton(ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pipe")){
+        if(element instanceof Pipe){
             List<Element> es = (List<Element>) element.getNeighbors();
             ArrayList<ElementButton> toReturn = new ArrayList<ElementButton>();
             for(Element eiter : es){
@@ -514,7 +516,7 @@ public class ElementButton extends JButton{
      * @param eb - Az összes UI elementButton elem.
      */
     public void drawWaterFlowDirection(Graphics g, ArrayList<ElementButton> eb){
-        if(element.getClass().getName().equals("Pump")){
+        if(element instanceof Pump){
             Pump p = (Pump)element;
             Element src = p.getSrc();
             Element dest = p.getDest();
@@ -524,9 +526,9 @@ public class ElementButton extends JButton{
             Graphics2D g2 = (Graphics2D)g;
             g2.setStroke(new BasicStroke(2));
             g2.setColor(Color.GREEN);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((srce.getBounds().x + srce.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((srce.getBounds().y + srce.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
             g2.setColor(Color.RED);
-            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/2)-(pe.getBounds().x + pe.getWidth()/2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/2)-(pe.getBounds().y + pe.getHeight()/2)))-10, 20, 20);
+            g2.fillOval((pe.getBounds().x + pe.getWidth()/2) + (int)(0.5*((deste.getBounds().x + deste.getWidth()/(double)2)-(pe.getBounds().x + pe.getWidth()/(double)2)))-10, (pe.getBounds().y + pe.getHeight()/2) + (int)(0.5*((deste.getBounds().y + deste.getHeight()/(double)2)-(pe.getBounds().y + pe.getHeight()/(double)2)))-10, 20, 20);
         }
     }
 
