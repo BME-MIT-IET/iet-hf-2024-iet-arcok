@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Nested;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-public class RepairmanActionsTest {
+class RepairmanActionsTest {
     Repairman rm;
     ArrayList<Element> elements;
     Pipe pipe;
