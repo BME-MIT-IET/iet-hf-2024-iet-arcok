@@ -91,6 +91,7 @@ public class Gui {
        });
 
        sPlayerCount = new JSpinner(new SpinnerNumberModel(4, 4, 8, 2));
+       sPlayerCount.setName("PlayerCount");
        sPlayerCount.setBounds(700, 290, 50, 50);
        sPlayerCount.setFont(new Font("Arial", Font.PLAIN, 30));
        menuPanel.add(sPlayerCount);
