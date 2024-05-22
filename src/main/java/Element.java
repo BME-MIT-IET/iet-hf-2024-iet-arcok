@@ -82,7 +82,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public void adjust(int src, int dest) { 
         Control.getInstance().appendToLog(this.Name+" is not adjustable.");
-    	//System.out.println(this.Name+" is not adjustable.");
     }
 
     
@@ -95,7 +94,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     public boolean accept(Character c) {
         standingOn.add(c);
         Control.getInstance().appendToLog("Successfully moved to "+ this.getName());
-        // System.out.println("Successfully moved to "+ this.getName());
         return true;
     }
 
@@ -115,7 +113,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public void damage() {
         Control.getInstance().appendToLog(this.Name+" is undamageable!");
-    	//System.out.println("Ilyen elemet nem lehet kilyukasztani!");
     }
 
     /** 
@@ -124,7 +121,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public void repair() { 
         Control.getInstance().appendToLog(this.Name+"is unrepairable");
-    	//System.out.println(this.Name+" unrepairable");
     }
 
     
@@ -135,7 +131,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public Pump givePump() {
         Control.getInstance().appendToLog("Can't pick up Pump here");
-        //System.out.println("Can't pick up Pump here");
         return null;
     }
 
@@ -148,7 +143,6 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public boolean placePipe(Pipe p) {
         Control.getInstance().appendToLog("Can't place"+p.getName()+" on "+this.Name);
-    	//System.out.println("Can't place"+p.getName()+" on "+this.Name);
         return false;
     }
 
@@ -160,18 +154,15 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
     @Override
     public Pipe placePump(Pump p) {
         Control.getInstance().appendToLog("Can't place"+p.getName()+" on "+this.Name);
-    	//System.out.println("Can't place"+p.getName()+" on "+this.Name);
         return null;
     }
     
     public void stick() {
         Control.getInstance().appendToLog(this.Name+" can't be sticky");
-    	// System.out.println(this.Name+" can't be sticky");
     }
     
     public void slime() {
         Control.getInstance().appendToLog(this.Name+" can't be slimey");
-    	// System.out.println(this.Name+" can't be slimey");
     }
     
     /**
@@ -185,17 +176,14 @@ public abstract class Element implements RepairmanPlace, SaboteurPlace{
         		this.getNeighbors().remove(dir);
         		n.removeNeighbor((NonPipe) this); // n. removeNeighbor(onmaga)?
                 Control.getInstance().appendToLog("Successfully picked up " + n.getName());
-            	// System.out.println("Successfully picked up "+n.getName());
         		return n;
         	}else {
                 Control.getInstance().appendToLog("Invalid object to pick up");
-        		// System.out.println("Invalid object to pick up");
         		return null;
         	}
     	}catch(IndexOutOfBoundsException e) {
     		//ha ervenytelen az index
             Control.getInstance().appendToLog("Invalid object to pick up");
-    		// System.out.println("Invalid object to pick up");
     		return null;
     	}
 

@@ -136,6 +136,12 @@ public class Pump extends NonPipe implements SaboteurPointSource {
                 containingWater=true;
             }
         }
+        //Release water form leaking pipe neighbors
+        for(Element neighbor : neighbors)
+        {
+            if(outputPipe!=neighbor)
+                neighbor.step();
+        }
         for(Element neighbor : inputPipe.getNeighbors())
         {
             if(this!=neighbor)
@@ -150,8 +156,6 @@ public class Pump extends NonPipe implements SaboteurPointSource {
     public void breakPump(){ 
     	 broken=true;
     }
-    public void stick() {};/** Ragadossa teszi az adott poziciot. */
-    public void slime(){};/** Csuszossa tesz egy csovet. */
 
     /** 
      * Visszadja a kifolyott viz mennyiseget, majd nullara allitja

@@ -13,6 +13,7 @@ public class Pipe extends Element implements SaboteurPointSource {
     private int sticky;
     private int slimey;
     private List<NonPipe> neighbors;
+    private Random random = new Random();
 
     /**
      * @author Szikszai Levente
@@ -27,7 +28,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Beállítja a betöltés során a Pipe változóit.
-     * 
+     *
      * @param hole        holeOnPipe
      * @param leakedWater leakedWaterAmount
      * @param _slimey     _slimey
@@ -45,7 +46,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Ot kell meghivni ha ra szeretnek lepni a csore.
-     * 
+     *
      * @param c - a karakterunk
      * @return boolean - a ralepes sikeressege
      */
@@ -54,32 +55,26 @@ public class Pipe extends Element implements SaboteurPointSource {
         boolean success;
         if (standingOn.size() == 1) {
             Control.getInstance().appendToLog("Failed to move to " + this.getName());
-            // System.out.println("Failed to move to " + this.getName());
             return false;
         } else {
             if (slimey > 0) {
-                success = false;
+                String startOfLogText = "Slipped to ";
                 if (neighbors.size() > 1) {
-                    Random random = new Random();
                     if (random.nextBoolean()) {
                         success = getNeighbors().get(0).accept(c);
-                        Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(0).getName());
-                        // System.out.println("Slipped to " + getNeighbors().get(0).getName());
+                        Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(0).getName());
                     } else {
                         success = getNeighbors().get(1).accept(c);
-                        Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(1).getName());
-                        // System.out.println("Slipped to " + getNeighbors().get(1).getName());
+                        Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(1).getName());
                     }
                 } else {
                     success = getNeighbors().get(0).accept(c);
-                    Control.getInstance().appendToLog("Slipped to " + getNeighbors().get(0).getName());
-                    // System.out.println("Slipped to " + getNeighbors().get(0).getName());
+                    Control.getInstance().appendToLog(startOfLogText + getNeighbors().get(0).getName());
                 }
                 return success;
             } else {
                 standingOn.add(c);
                 Control.getInstance().appendToLog("Successfully moved to " + this.getName());
-                // System.out.println("Successfully moved to " + this.getName());
                 return true;
             }
         }
@@ -87,14 +82,13 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Lelepes egy csorol
-     * 
+     *
      * @param c a karakter
      * @return Sikeres volt-e a lelepes
      */
     public boolean remove(Character c) {
         if (sticky > 0) {
             Control.getInstance().appendToLog("Sticked to " + this.getName() + "can't move until: " + sticky);
-            // System.out.println("Sticked to " + this.getName() + "can't move until: " + sticky);
             sticky--;
             return false;
         } else {
@@ -110,7 +104,7 @@ public class Pipe extends Element implements SaboteurPointSource {
      */
     @Override
     public void step() {
-        if (holeOnPipe) {
+        if (holeOnPipe&&containingWater) {
             containingWater = false;
             leakedWaterAmount++;
         }
@@ -125,10 +119,8 @@ public class Pipe extends Element implements SaboteurPointSource {
             holeOnPipe = false;
             this.breakable = (int) (Math.random() * 4) + 2;
             Control.getInstance().appendToLog("Succesfully repaired " + this.getName());
-            // System.out.println("Succesfully repaired " + this.getName());
         } else {
             Control.getInstance().appendToLog("Not broken");
-            // System.out.println("Not broken");
         }
     }
 
@@ -140,22 +132,19 @@ public class Pipe extends Element implements SaboteurPointSource {
         if (breakable == 0) {
             if (holeOnPipe) {
                 Control.getInstance().appendToLog("Failed to stab " + this.getName() + " already has a hole");
-                // System.out.println("Failed to stab " + this.getName() + " already has a hole");
             } else {
                 holeOnPipe = true;
                 step();
                 Control.getInstance().appendToLog("Successfully stabbed " + this.getName());
-                // System.out.println("Successfully stabbed " + this.getName());
             }
         } else {
             Control.getInstance().appendToLog("Failed to stab " + this.getName() + " unbreakable until: " + breakable);
-            // System.out.println("Failed to stab " + this.getName() + " unbreakable until: " + breakable);
         }
     }
 
     /**
      * Letrehoz egy uj csovet, majd koze es a meglevo cso koze lehelyezi a pumpat.
-     * 
+     *
      * @param holdingPump - a lehelyezni kivant pumpa
      * @return Pipe - az ujonnan letrehozott cso
      */
@@ -164,9 +153,12 @@ public class Pipe extends Element implements SaboteurPointSource {
         NonPipe n;
         if (holdingPump == null) {
             Control.getInstance().appendToLog("No placable pump");
-            // System.out.println("No placable pump");
         }
         n = (NonPipe) getNeighbors().get(0);
+        if (holdingPump == null) {
+            Control.getInstance().appendToLog("HoldingPump is null, can't place it.");
+            return null;
+        }
         if (n != null) {
             removeNeighbor(n);
             n.removeNeighbor(this);
@@ -180,11 +172,9 @@ public class Pipe extends Element implements SaboteurPointSource {
             int rnd = (int) (Math.random() * 1000) + 100;
             p.setName("pi" + rnd);
             Control.getInstance().appendToLog("Successfully placed " + holdingPump.getName() + ", new pipe: " + p.getName());
-            // System.out.println("Successfully placed " + holdingPump.getName() + ", new pipe: " + p.getName());
             return p;
         } else {
             Control.getInstance().appendToLog("Can't place " + holdingPump.getName() + " on " + this.getName());
-            // System.out.println("Can't place " + holdingPump.getName() + " on " + this.getName());
             return null;
         }
     }
@@ -192,30 +182,28 @@ public class Pipe extends Element implements SaboteurPointSource {
     /**
      * Olyan cso felemelesenel hasznaljuk, amelyiknek az egyik fele nincs sehova
      * bekotve.
-     * 
+     *
      * @param dir - nem hasznaljuk ebben a megvalositsban
      * @return Pipe - a cso, amit felemelunk
      */
     @Override
     public Pipe lift(int dir) {
         try {
-            if (neighbors.size() == 1 && neighbors.get(0).getClass().getName().equals("Cistern")) {
+            if (neighbors.size() == 1 && neighbors.get(0) instanceof Cistern) {
                 return this;
             }
         } catch (IndexOutOfBoundsException e) {
             Control.getInstance().appendToLog("Invalid pipe to pick up.");
-            // System.out.println("Invalid pipe to pick up.");
             return null;
         }
         Control.getInstance().appendToLog("Invalid pipe to pick up.");
-        // System.out.println("Invalid pipe to pick up.");
         return null;
 
     }
 
     /**
      * Uj szomszed hozzacsatlakoztatasa a csohoz.
-     * 
+     *
      * @param n - a csatlakoztatni kivant szomszed
      */
     public void addNeighbor(NonPipe n) {
@@ -226,7 +214,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Ezen keresztul lehet rola szomszedot lecsatlakoztatni.
-     * 
+     *
      * @param n - a lecsatlakoztatni kivant szomszed
      */
     public void removeNeighbor(NonPipe n) {
@@ -235,7 +223,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Visszadja a kifolyott viz mennyiseget, majd nullara allitja
-     * 
+     *
      * @return int - a kifolyott viz mennyisege
      */
     @Override
@@ -247,7 +235,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Kiszivja az adott csobol a vizet
-     * 
+     *
      * @return boolean - volt-e benne viz
      */
     public boolean waterExtraction() {
@@ -262,7 +250,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Vizet probal a csobe tenni
-     * 
+     *
      * @return boolean - sikerult-e bele vizet tenni
      */
     public boolean giveWater() {
@@ -280,19 +268,17 @@ public class Pipe extends Element implements SaboteurPointSource {
     public void stick() {
         sticky = -Game.sticky;
         Control.getInstance().appendToLog(this.getName() + " is now sticky");
-        // System.out.println(this.getName() + " is now sticky");
     };
 
     /** Csuszossa tesz egy csovet. */
     public void slime() {
         slimey = Game.slimey;
         Control.getInstance().appendToLog(this.getName() + " is now slimey");
-        // System.out.println(this.getName() + " is now slimey");
     };
 
     /**
      * Visszaadja a szomszedait
-     * 
+     *
      * @return List<NonPipe> - a szomszedok
      */
     public List<NonPipe> getNeighbors() {

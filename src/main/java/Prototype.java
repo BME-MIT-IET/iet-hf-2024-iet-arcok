@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Prototípus osztály. Csak tesztelésre (Prototype, nogui Version)
@@ -23,8 +25,9 @@ public class Prototype {
     Character currentCharacter;
     int currentCharacterInt = 0;
     int ac = 0; //* ActionCounter */
-
+    String mapDeclarationString = "mapdeclarations/";
 	private String selectedMenuItem; /** A kivalasztott parancs */
+    private Logger logger;
 
     /**
      * Inicializálja a Prototype-ot
@@ -106,11 +109,10 @@ public class Prototype {
         cisterns.clear();
         pumps.clear();
 
-        File f = new File("mapdeclarations/"+file+".txt");
-        try 
+        File f = new File(mapDeclarationString+file+".txt");
+        try (Scanner sc = new Scanner(f))
         {
             int readPhase = 0;
-            Scanner sc = new Scanner(f);
             sc.nextLine(); //kidobjuk az első sort
             while(sc.hasNext())
             {
@@ -288,16 +290,13 @@ public class Prototype {
                         int repPoints = 0;
                         int _slimey = 3;
                         int _sticky = 3;
-                        try{
-                            File fPoints = new File(file+"Points.txt"); 
-                            Scanner scPoints = new Scanner(fPoints);
-
+                        File fPoints = new File(file+"Points.txt"); 
+                        try (Scanner scPoints = new Scanner(fPoints)){
                             round = sc.nextInt();
                             repPoints = sc.nextInt();
                             sabPoints = sc.nextInt();
                             _slimey = sc.nextInt();
                             _sticky = sc.nextInt();
-                            scPoints.close();
                         }
                         catch(Exception e)
                         {
@@ -325,7 +324,7 @@ public class Prototype {
         PrintWriter pw;
         try 
         {
-            File f = new File("mapdeclarations/"+file+".txt");
+            File f = new File(mapDeclarationString+file+".txt");
             pw = new PrintWriter(f);
             ArrayList<Element> gameElements = Game.getInstance().getGameElements();
             pw.println("###Declaration###");
@@ -357,7 +356,7 @@ public class Prototype {
             }
             pw.close();
             
-            f = new File("mapdeclarations/"+file+"Points.txt");
+            f = new File(mapDeclarationString+file+"Points.txt");
             pw = new PrintWriter(f);
             pw.println(Game.getInstance().toString());
             pw.close();
@@ -428,12 +427,15 @@ public class Prototype {
      */
     public void togglerandom(String param)
     {
-        if(param.equals("I"))
-        Game.getInstance().setRandomEnabled(true);
-        else if(param.equals("N"))
-        Game.getInstance().setRandomEnabled(false);
-        else
-        System.out.println("Invalid input");
+        if (param.equals("I")) {
+            Game.getInstance().setRandomEnabled(true);
+        }
+        else if (param.equals("N")) {
+            Game.getInstance().setRandomEnabled(false);
+        }
+        else {
+            System.out.println("Invalid input");
+        }
     }
 
     /**
@@ -459,11 +461,13 @@ public class Prototype {
      */
     public void help()
     {
-        if(isCurrentRepairman())
+        if(isCurrentRepairman()) {
             System.out.println("adjust int int\nmove int\nstab\nrepair\npickuppump\npickuppipe int\nplacepump\nplacepipe\nstick\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
-        else
-        System.out.println("adjust int int\nmove int\nstab\nstick\nslime\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
         }
+        else {
+            System.out.println("adjust int int\nmove int\nstab\nstick\nslime\nendturn\nsave fileName\nload fileName\nhelp\ninfo string\ntogglerandom I/N\nq");
+        }
+    }
 
     public void info(String name){
         boolean found = false;
@@ -491,7 +495,7 @@ public class Prototype {
         try{
             Game.getInstance().endTurn();
         }catch(Exception e){
-            e.printStackTrace();
+            logger.log(Level.FINER, e.toString());
         }
         String prevname = currentCharacter.getName();
         if(++currentCharacterInt>=characters.size()){

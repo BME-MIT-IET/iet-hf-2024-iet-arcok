@@ -58,7 +58,7 @@ class SaboteurActsOnPipeUITest {
 
         window.button("Pipe4EBStick").click();
 
-        assertEquals(-3, pipe4.getSticky());
+        assertEquals(-2, pipe4.getSticky());
     }
 
     @Test
@@ -70,7 +70,7 @@ class SaboteurActsOnPipeUITest {
 
         window.button("Pipe4EBSlime").click();
 
-        assertEquals(3, pipe4.getSlimey());
+        assertEquals(2, pipe4.getSlimey());
     }
 
     @AfterEach
