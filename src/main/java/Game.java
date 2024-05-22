@@ -60,6 +60,10 @@ public class Game {
 	{
 		return instance;
 	}
+
+    public static void resetInstance() {
+        instance = new Game();
+    }
 	
 	/**
 	 * Beállítja a Game megfelelő változóit.

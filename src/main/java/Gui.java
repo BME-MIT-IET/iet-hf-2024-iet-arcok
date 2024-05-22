@@ -4,7 +4,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 /**
  * A játék grafikus felületét megvalósító osztály.
@@ -36,7 +35,7 @@ public class Gui {
     private static final String FONT_FAMILY = "Arial";
 
     // Az egyetlen Gui objektum
-    private static Gui instance = new Gui();;
+    private static Gui instance = new Gui();
 
     /**
      * Visszaadja a Singleton Gui objektumot
@@ -44,6 +43,11 @@ public class Gui {
      * @return Singleton Gui objektum
      */
     public static Gui getInstance() {
+        return instance;
+    }
+
+    public static Gui resetInstance() {
+        instance = new Gui();
         return instance;
     }
 
@@ -58,6 +62,7 @@ public class Gui {
 
        // ---------------MENU PANEL-----------------
        menuPanel = new JPanel();
+       menuPanel.setName("MenuPanel");
        menuPanel.setSize(1280, 720);
 
        menuPanel.setLayout(null); // Null layout beállítása a menü panelen
@@ -73,6 +78,7 @@ public class Gui {
        menuPanel.add(lPlayerCount);
 
        sRoundSettings = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+       sRoundSettings.setName("RoundSetter");
        sRoundSettings.setBounds(700, 90, 50, 50);
        sRoundSettings.setFont(new Font(FONT_FAMILY, Font.PLAIN, 30));
        menuPanel.add(sRoundSettings);
@@ -88,11 +94,13 @@ public class Gui {
        });
 
        sPlayerCount = new JSpinner(new SpinnerNumberModel(4, 4, 8, 2));
+       sPlayerCount.setName("PlayerCount");
        sPlayerCount.setBounds(700, 290, 50, 50);
        sPlayerCount.setFont(new Font(FONT_FAMILY, Font.PLAIN, 30));
        menuPanel.add(sPlayerCount);
 
        JButton bStart = new JButton("Start");
+       bStart.setName("StartButton");
        bStart.setBounds(500, 600, 200, 50);
        bStart.setFont(new Font(FONT_FAMILY, Font.PLAIN, 30));
        bStart.setBackground(Color.GRAY);
@@ -130,6 +138,7 @@ public class Gui {
             }
         };
         gamePanel.setLayout(null);
+        gamePanel.setName("GamePanel");
         gamePanel.setSize(1280, 720);
         elementButtons = new ArrayList<ElementButton>();
 
@@ -188,6 +197,7 @@ public class Gui {
 
         //Turn points label
         lTurnPoints = new JLabel("0");
+        lTurnPoints.setName("TurnCounterLabel");
         lTurnPoints.setFont(new Font(FONT_FAMILY, Font.PLAIN, 15));
         lTurnPoints.setBounds(100, 65, 200, 20);
         jPanelScoreBoard.add(lTurnPoints);
@@ -198,12 +208,14 @@ public class Gui {
 
         //Who`s turn label
         lWhosTurn = new JLabel("...-s turn");
+        lWhosTurn.setName("WhosTurnLabel");
         lWhosTurn.setFont(new Font(FONT_FAMILY, Font.BOLD, 25));
         lWhosTurn.setBounds(980, 20, 300, 20);
         gamePanel.add(lWhosTurn);
 
         //End Move button
         JButton bEndMove = new JButton("End Move");
+        bEndMove.setName("EndMoveButton");
         bEndMove.setBounds(980, 550, 300, 50);
         bEndMove.setFont(new Font(FONT_FAMILY, Font.PLAIN, 20));
         bEndMove.setBackground(Color.WHITE);
@@ -212,6 +224,7 @@ public class Gui {
         gamePanel.add(bEndMove);
 
         JButton bEnd = new JButton("End Game");
+        bEnd.setName("EndButton");
         bEnd.setFont(new Font(FONT_FAMILY, Font.PLAIN, 20));
         bEnd.setBounds(980, 600, 300, 50);
         bEnd.addActionListener(e -> nextPanel());
@@ -220,6 +233,7 @@ public class Gui {
         Cistern c1 = new Cistern(0);
         c1.setName("Cistern1");
         ElementButton cistern1 = new ElementButton(c1);
+        cistern1.setName("Cistern1EB");
         cistern1.setBounds(200, 500, 90, 90);
         elementButtons.add(cistern1);
         Game.getInstance().addCistern(c1);
@@ -228,6 +242,7 @@ public class Gui {
         WaterSource w1 = new WaterSource();
         w1.setName("WaterSource1");
         ElementButton ws1 = new ElementButton(w1);
+        ws1.setName("WaterSource1EB");
         ws1.setBounds(200, 100, 90, 90);
         elementButtons.add(ws1);
         Game.getInstance().addElement(w1);
@@ -236,6 +251,7 @@ public class Gui {
         Pump p1 = new Pump();
         p1.setName("Pump1");
         ElementButton pump1 = new ElementButton(p1);
+        pump1.setName("Pump1EB");
         pump1.setBounds(200, 300, 90, 90);
         elementButtons.add(pump1);
         Game.getInstance().addPump(p1);
@@ -244,6 +260,7 @@ public class Gui {
         Cistern c2 = new Cistern(0);
         c2.setName("Cistern2");
         ElementButton cistern2 = new ElementButton(c2);
+        cistern2.setName("Cistern2EB");
         cistern2.setBounds(600, 500, 90, 90);
         elementButtons.add(cistern2);
         Game.getInstance().addCistern(c2);
@@ -252,6 +269,7 @@ public class Gui {
         WaterSource w2 = new WaterSource();
         w2.setName("WaterSource2");
         ElementButton ws2 = new ElementButton(w2);
+        ws2.setName("WaterSource2EB");
         ws2.setBounds(600, 100, 90, 90);
         elementButtons.add(ws2);
         Game.getInstance().addElement(w2);
@@ -260,6 +278,7 @@ public class Gui {
         Pump p2 = new Pump(false, true, 0);
         p2.setName("Pump2");
         ElementButton pump2 = new ElementButton(p2);
+        pump2.setName("Pump2EB");
         pump2.setBounds(600, 300, 90, 90);
         elementButtons.add(pump2);
         Game.getInstance().addPump(p2);
@@ -273,6 +292,7 @@ public class Gui {
         pi1.addNeighbor(p1);
         p1.addNeighbor(pi1);
         ElementButton pie1 = new ElementButton(pi1);
+        pie1.setName("Pipe1EB");
         pie1.setBounds(215, 215, 60, 60);
         elementButtons.add(pie1);
         Game.getInstance().addPipe(pi1);
@@ -285,6 +305,7 @@ public class Gui {
         pi2.addNeighbor(p1);
         p1.addNeighbor(pi2);
         ElementButton pie2 = new ElementButton(pi2);
+        pie2.setName("Pipe2EB");
         pie2.setBounds(215, 415, 60, 60);
         elementButtons.add(pie2);
         Game.getInstance().addPipe(pi2);
@@ -297,6 +318,7 @@ public class Gui {
         pi3.addNeighbor(p2);
         p2.addNeighbor(pi3);
         ElementButton pie3 = new ElementButton(pi3);
+        pie2.setName("Pipe3EB");
         pie3.setBounds(615, 415, 60, 60);
         elementButtons.add(pie3);
         Game.getInstance().addPipe(pi3);
@@ -309,6 +331,7 @@ public class Gui {
         pi4.addNeighbor(p2);
         p2.addNeighbor(pi4);
         ElementButton pie4 = new ElementButton(pi4);
+        pie4.setName("Pipe4EB");
         pie4.setBounds(615, 215, 60, 60);
         elementButtons.add(pie4);
         Game.getInstance().addPipe(pi4);
@@ -321,6 +344,7 @@ public class Gui {
         pi5.addNeighbor(p2);
         p2.addNeighbor(pi5);
         ElementButton pie5 = new ElementButton(pi5);
+        pie5.setName("Pipe5EB");
         pie5.setBounds(415, 315, 60, 60);
         elementButtons.add(pie5);
         Game.getInstance().addPipe(pi5);
@@ -331,6 +355,7 @@ public class Gui {
         pi6.addNeighbor(p2);
         p2.addNeighbor(pi6);
         ElementButton pie6 = new ElementButton(pi6);
+        pie6.setName("Pipe6EB");
         pie6.setEnabled(true);
         pie6.setBounds(815, 315, 60, 60);
         elementButtons.add(pie6);
@@ -568,6 +593,19 @@ public class Gui {
         {
             if(button.getElement()==element)
                 return button;
+        }
+        return null;
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public ElementButton getElementButton(String name) {
+        for (ElementButton eb : elementButtons) {
+            if (eb.getName() != null && eb.getName().equals(name)) {
+                return eb;
+            }
         }
         return null;
     }
