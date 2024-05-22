@@ -136,6 +136,12 @@ public class Pump extends NonPipe implements SaboteurPointSource {
                 containingWater=true;
             }
         }
+        //Release water form leaking pipe neighbors
+        for(Element neighbor : neighbors)
+        {
+            if(outputPipe!=neighbor)
+                neighbor.step();
+        }
         for(Element neighbor : inputPipe.getNeighbors())
         {
             if(this!=neighbor)

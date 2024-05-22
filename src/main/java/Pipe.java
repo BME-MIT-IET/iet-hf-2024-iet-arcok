@@ -28,7 +28,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Beállítja a betöltés során a Pipe változóit.
-     * 
+     *
      * @param hole        holeOnPipe
      * @param leakedWater leakedWaterAmount
      * @param _slimey     _slimey
@@ -46,7 +46,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Ot kell meghivni ha ra szeretnek lepni a csore.
-     * 
+     *
      * @param c - a karakterunk
      * @return boolean - a ralepes sikeressege
      */
@@ -82,7 +82,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Lelepes egy csorol
-     * 
+     *
      * @param c a karakter
      * @return Sikeres volt-e a lelepes
      */
@@ -104,7 +104,7 @@ public class Pipe extends Element implements SaboteurPointSource {
      */
     @Override
     public void step() {
-        if (holeOnPipe) {
+        if (holeOnPipe&&containingWater) {
             containingWater = false;
             leakedWaterAmount++;
         }
@@ -144,7 +144,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Letrehoz egy uj csovet, majd koze es a meglevo cso koze lehelyezi a pumpat.
-     * 
+     *
      * @param holdingPump - a lehelyezni kivant pumpa
      * @return Pipe - az ujonnan letrehozott cso
      */
@@ -182,7 +182,7 @@ public class Pipe extends Element implements SaboteurPointSource {
     /**
      * Olyan cso felemelesenel hasznaljuk, amelyiknek az egyik fele nincs sehova
      * bekotve.
-     * 
+     *
      * @param dir - nem hasznaljuk ebben a megvalositsban
      * @return Pipe - a cso, amit felemelunk
      */
@@ -203,7 +203,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Uj szomszed hozzacsatlakoztatasa a csohoz.
-     * 
+     *
      * @param n - a csatlakoztatni kivant szomszed
      */
     public void addNeighbor(NonPipe n) {
@@ -214,7 +214,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Ezen keresztul lehet rola szomszedot lecsatlakoztatni.
-     * 
+     *
      * @param n - a lecsatlakoztatni kivant szomszed
      */
     public void removeNeighbor(NonPipe n) {
@@ -223,7 +223,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Visszadja a kifolyott viz mennyiseget, majd nullara allitja
-     * 
+     *
      * @return int - a kifolyott viz mennyisege
      */
     @Override
@@ -235,7 +235,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Kiszivja az adott csobol a vizet
-     * 
+     *
      * @return boolean - volt-e benne viz
      */
     public boolean waterExtraction() {
@@ -250,7 +250,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Vizet probal a csobe tenni
-     * 
+     *
      * @return boolean - sikerult-e bele vizet tenni
      */
     public boolean giveWater() {
@@ -278,7 +278,7 @@ public class Pipe extends Element implements SaboteurPointSource {
 
     /**
      * Visszaadja a szomszedait
-     * 
+     *
      * @return List<NonPipe> - a szomszedok
      */
     public List<NonPipe> getNeighbors() {
