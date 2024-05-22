@@ -110,18 +110,22 @@ public class Gui {
                     ElementButton eb = elementButtons.get(i);
                     ArrayList<ElementButton> neigh = eb.getNeighboursElementButton(elementButtons);
                     if(neigh != null){
-                        if(neigh.size()==2 && neigh.get(0).equals(neigh.get(1))){
-                            drawLineBetweenButtons(eb, neigh.get(0), Color.BLACK, g, true);
-                        }else{
-                            for(ElementButton n : neigh){
-                                drawLineBetweenButtons(eb, n, Color.BLACK, g, false);
-                            }
-                        }
+                        drawLinesBetweenButtons(g, neigh, eb);
                     }
                 }
                 for(int i = 0; i < elementButtons.size(); i++){
                     ElementButton eb = elementButtons.get(i);
                     eb.drawWaterFlowDirection(g, elementButtons);
+                }
+            }
+
+            private void drawLinesBetweenButtons(Graphics g, ArrayList<ElementButton> neigh, ElementButton eb) {
+                if(neigh.size()==2 && neigh.get(0).equals(neigh.get(1))){
+                    drawLineBetweenButtons(eb, neigh.get(0), Color.BLACK, g, true);
+                }else{
+                    for(ElementButton n : neigh){
+                        drawLineBetweenButtons(eb, n, Color.BLACK, g, false);
+                    }
                 }
             }
         };
@@ -430,25 +434,7 @@ public class Gui {
         if(activePanel == menuPanel){
             activePanel = gamePanel;
             int playerc = (Integer)sPlayerCount.getValue();
-            for(int i = 0; i < playerc; i++){
-                if(i%2==0){
-                    Repairman c;
-                    Element e1 = Game.getInstance().getGameElements().get(3);
-                    c = new Repairman(e1, null, null);
-                    if(i==0) c = new Repairman(e1, null, new Pump());
-                    if(i==2) c = new Repairman(e1, pi6, null);
-                    c.setName("Repairman"+repairmanNum++);
-                    e1.addStandingOn(c);
-                    Game.getInstance().addRepairman((Repairman)c);
-                }else{
-                    Saboteur c;
-                    Element e2 = Game.getInstance().getGameElements().get(4);
-                    c = new Saboteur(e2);
-                    c.setName("Saboteur"+saboteurNum++);
-                    e2.addStandingOn(c);
-                    Game.getInstance().addSaboteur((Saboteur)c);
-                }
-            }
+             createPlayers(playerc);
             Game.getInstance().setCurrentCharacter(Game.getInstance().getSaboteurGroup().get(0));
             //CurrentCharacter inicializálása, hogy helyesen jelenjen meg kezdéskor
             updateFrame();
@@ -483,6 +469,28 @@ public class Gui {
         }
         frame.getContentPane().add(activePanel);
         frame.setVisible(true);
+    }
+
+    private void createPlayers(int playerc) {
+        for(int i = 0; i < playerc; i++){
+            if(i%2==0){
+                Repairman c;
+                Element e1 = Game.getInstance().getGameElements().get(3);
+                c = new Repairman(e1, null, null);
+                if(i==0) c = new Repairman(e1, null, new Pump());
+                if(i==2) c = new Repairman(e1, pi6, null);
+                c.setName("Repairman"+repairmanNum++);
+                e1.addStandingOn(c);
+                Game.getInstance().addRepairman((Repairman)c);
+            }else{
+                Saboteur c;
+                Element e2 = Game.getInstance().getGameElements().get(4);
+                c = new Saboteur(e2);
+                c.setName("Saboteur"+saboteurNum++);
+                e2.addStandingOn(c);
+                Game.getInstance().addSaboteur((Saboteur)c);
+            }
+        }
     }
 
     /**
